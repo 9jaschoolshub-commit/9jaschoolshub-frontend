@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { Linkedin,  Instagram, Phone, Mail, Clock, MapPinIcon} from 'lucide-react'
 import twitter from '../assets/Twitter Icon.png'
-import TermsModal from './termsModal'
+import TermsModal from './TermsModal'
 import PrivacyPolicyModal from './PrivacyPolicyModal'
 
 
