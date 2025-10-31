@@ -5,6 +5,7 @@ import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import { universityAPI } from "../services/universityApi";
+import UniversityCardSkeleton from "../components/UniversityCardSkeleton";
 import uniImage1 from "../assets/uni1.webp";
 import uniImage2 from "../assets/uni2.jpg";
 import uniImage3 from "../assets/uni3.jpg";
@@ -287,10 +288,13 @@ const UniversityFinder = () => {
       {/* Universities Grid */}
       <div className="max-w-7xl mx-auto px-4 py-12">
         {loading ? (
-          <div className="text-center py-12">
-            <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
-            <p className="mt-4 text-gray-600">Loading universities...</p>
+          <section className="py-16 bg-gray-50">
+          <div className="max-w-7xl mx-auto px-4">
+            <div className="grid md:grid-cols-3 gap-8 mb-12">
+              {[...Array(9)].map((_, i) => <UniversityCardSkeleton key={i} />)}
+            </div>
           </div>
+        </section>
         ) : error ? (
           <div className="text-center py-12">
             <p className="text-red-600 mb-4">{error}</p>
