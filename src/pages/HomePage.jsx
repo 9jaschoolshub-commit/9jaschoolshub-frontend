@@ -18,6 +18,7 @@ import topImage from "../assets/top-image.jpg";
 import bottomImage from "../assets/bottom-image.jpg";
 import academyJourney from "../assets/academy-journey.jpg";
 import UniversityCardSkeleton from "../components/UniversityCardSkeleton";
+
 const ICONS = [
   <Palette className="w-5 h-5 text-blue-600" />,
   <Scale className="w-5 h-5 text-green-600" />,
@@ -28,6 +29,7 @@ const ICONS = [
   <Building2 className="w-5 h-5 text-indigo-600" />,
   <Globe className="w-5 h-5 text-teal-600" />,
 ];
+
 const HomePage = () => {
   const navigate = useNavigate();
   const [searchInput, setSearchInput] = useState("");
@@ -41,11 +43,13 @@ const HomePage = () => {
       try {
         setLoading(true);
         const res = await universityAPI.getAllUniversities();
-        setUniversities(res.doc || []);
-
+        // console.log("response:", res);
+        
+        setUniversities(res.data.doc || []);
+        
         // Generate disciplines from faculties
         const facultyMap = {};
-        res.doc.forEach((uni) => {
+        res.data.doc.forEach((uni) => {
           uni.notable_programs.forEach((program) => {
             const faculty = program.Faculty;
             if (!facultyMap[faculty]) {
@@ -140,7 +144,11 @@ const HomePage = () => {
                   className="px-5 py-3 w-full rounded-lg border border-gray-400 focus:outline-none focus:ring-2 focus:ring-orange-400"
                   placeholder="Search University by name..."
                 />
-                <button className="absolute right-0 mr-5" type="submit">
+                <button
+                  className="absolute right-0 mr-5"
+                  type="submit"
+                  aria-label="Search for a university"
+                >
                   <Search className="text-slate-700 cursor-pointer" />
                 </button>
               </form>
@@ -149,7 +157,7 @@ const HomePage = () => {
               <div className="flex">
                 <img
                   src={topImage}
-                  alt="Students studying"
+                  alt="Two university students smiling and studying together"
                   className="w-1/2 rounded-2xl p-2"
                   loading="lazy"
                 />
@@ -159,7 +167,7 @@ const HomePage = () => {
                 <div className="w-1/2"></div>
                 <img
                   src={bottomImage}
-                  alt="Graduate student"
+                  alt="A student in graduation attire holding a certificate"
                   className="w-1/2 rounded-2xl p-2"
                   loading="lazy"
                 />

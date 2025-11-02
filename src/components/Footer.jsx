@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Link } from "react-router-dom";
 import {
   Linkedin,
   Instagram,
@@ -69,14 +70,14 @@ const Footer = () => {
                 <h3 className="font-bold mb-4">Quick Links</h3>
                 <ul className="space-y-2 text-sm text-gray-50">
                   <li>
-                    <a href="/universities" className="hover:text-orange-400">
+                    <Link to="/universities" className="hover:text-orange-400 focus:outline-none focus:ring-2 focus:ring-orange-400 rounded">
                       Universities
-                    </a>
+                    </Link>
                   </li>
                   <li>
-                    <a href="/courses" className="hover:text-orange-400">
+                    <Link to="/courses" className="hover:text-orange-400 focus:outline-none focus:ring-2 focus:ring-orange-400 rounded">
                       Courses
-                    </a>
+                    </Link>
                   </li>
                 </ul>
               </div>
@@ -84,21 +85,21 @@ const Footer = () => {
               <div className="block sm:hidden flex-col space-y-2">
                 <h1 className="font-bold pb-2">Infomation</h1>
                 <div
-                  className="hover:text-orange-400 cursor-pointer"
+                  className="hover:text-orange-400 cursor-pointer focus:outline-none focus:ring-2 focus:ring-orange-400 rounded"
                   onClick={() => {
                     setShowPrivacy(true);
                   }}
                 >
                   Privacy Policy
                 </div>
-                <button
-                  className="hover:text-orange-400 cursor-pointer"
+                <div
+                  className="hover:text-orange-400 cursor-pointer focus:outline-none focus:ring-2 focus:ring-orange-400 rounded"
                   onClick={() => {
                     setShowTerms(true);
                   }}
                 >
                   Terms of service
-                </button>
+                </div>
               </div>
 
               <div>

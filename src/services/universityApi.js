@@ -5,7 +5,7 @@ const API_BASE_URL = import.meta.env.VITE_APP_API_URL;
 
 const api = axios.create({
   baseURL: API_BASE_URL,
-  timeout: 30000, // 30 seconds
+  timeout: 60000, // 60 seconds
   timeoutErrorMessage: "The request timed out. Kindly try again or refresh your page"
 });
 
@@ -57,7 +57,7 @@ export const universityAPI = {
   getAllUniversities: async () => {
     try {
       const response = await api.get("/universityRoute");
-      return response.data.data;
+      return response.data;
     } catch (error) {
       console.error("Error fatching all universitis", error);
       throw new Error(

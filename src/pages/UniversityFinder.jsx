@@ -80,9 +80,9 @@ const UniversityFinder = () => {
       try {
         setLoading(true);
         const response = await universityAPI.getAllUniversities();
-        setUniversities(response.doc);
-        setFilteredUniversities(response.doc);
-        console.log(response);
+        setUniversities(response.data.doc);
+        setFilteredUniversities(response.data.doc);
+        // console.log(response);
         setError(null);
       } catch (err) {
         setError(err.message);
