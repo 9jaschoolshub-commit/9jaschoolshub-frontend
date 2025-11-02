@@ -1,105 +1,112 @@
-import { useState, useEffect } from 'react';
-import { NavLink, useNavigate, useSearchParams } from 'react-router-dom';
-import { Search, ChevronDown, MapPin, Phone, Mail, ExternalLink } from 'lucide-react';
-import { SearchProgrammes, universityAPI } from '../services/universityApi';
-import filterData from '../data/filterData';
+import { useState, useEffect } from 'react'
+import { NavLink, useNavigate, useSearchParams } from 'react-router-dom'
+import {
+  Search,
+  ChevronDown,
+  MapPin,
+  Phone,
+  Mail,
+  ExternalLink,
+} from 'lucide-react'
+import { searchProgrammes, universityAPI } from '../services/universityApi'
+import filterData from '../data/filterData'
 
 const CourseSearch = () => {
-  const [searchQuery, setSearchQuery] = useState('');
-  const [selectedType, setSelectedType] = useState('');
-  const [selectedLocation, setSelectedLocation] = useState('');
-  const [universities, setUniversities] = useState([]);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
-  const [universityTypes, setUniversityTypes] = useState([]);
-  const [locations, setLocations] = useState([]);
+  const [searchQuery, setSearchQuery] = useState('')
+  const [selectedType, setSelectedType] = useState('')
+  const [selectedLocation, setSelectedLocation] = useState('')
+  const [universities, setUniversities] = useState([])
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState('')
+  const [universityTypes, setUniversityTypes] = useState([])
+  const [locations, setLocations] = useState([])
 
-  const [searchParams] = useSearchParams();
-  const navigate = useNavigate();
+  const [searchParams] = useSearchParams()
+  const navigate = useNavigate()
 
   // Extract query from URL on mount
   useEffect(() => {
-    const query = searchParams.get('search');
+    const query = searchParams.get('search')
     if (query) {
-      setSearchQuery(query);
+      setSearchQuery(query)
     }
 
-    setUniversityTypes(filterData.universityType);
-    setLocations(filterData.universityLocation);
-  }, [searchParams]);
+    setUniversityTypes(filterData.universityType)
+    setLocations(filterData.universityLocation)
+  }, [searchParams])
 
   // Sync URL with filters
   useEffect(() => {
-    const params = new URLSearchParams();
-    if (searchQuery) params.set('search', searchQuery);
-    if (selectedType) params.set('type', selectedType);
-    if (selectedLocation) params.set('location', selectedLocation);
+    const params = new URLSearchParams()
+    if (searchQuery) params.set('search', searchQuery)
+    if (selectedType) params.set('type', selectedType)
+    if (selectedLocation) params.set('location', selectedLocation)
 
-    navigate(`?${params.toString()}`, { replace: true });
-  }, [searchQuery, selectedType, selectedLocation, navigate]);
+    navigate(`?${params.toString()}`, { replace: true })
+  }, [searchQuery, selectedType, selectedLocation, navigate])
 
   // Fetch universities when any filter changes (with debounce)
   useEffect(() => {
     const delayDebounce = setTimeout(() => {
-      fetchUniversities();
-    }, 100);
+      fetchUniversities()
+    }, 100)
 
-    return () => clearTimeout(delayDebounce);
-  }, [searchQuery, selectedType, selectedLocation]);
+    return () => clearTimeout(delayDebounce)
+  }, [searchQuery, selectedType, selectedLocation])
 
   const fetchUniversities = async () => {
     try {
-      setLoading(true);
-      setError('');
-      let data;
+      setLoading(true)
+      setError('')
+      let data
 
       // If there's a search query, use API. Otherwise, get all unis.
       if (searchQuery) {
-        const res = await SearchProgrammes(searchQuery);
-        data = res.data || [];
+        const res = await searchProgrammes(searchQuery)
+        data = res.data || []
       } else {
         // Optional: create an API method to get all universities
         // For now, assume SearchProgrammes with empty query returns all?
         // Or you can add a new API call like `getAllUniversities()`
-        const res = await universityAPI.getAllUniversities // Modify backend to return all if empty
-        data = res.data || [];
+        const res = await universityAPI.getAllUniversities() // Modify backend to return all if empty
+        data = res.data || []
       }
 
-      let filtered = data;
+      let filtered = data
 
       if (selectedType) {
-        filtered = filtered.filter((u) => u.type === selectedType);
+        filtered = filtered.filter((u) => u.type === selectedType)
       }
       if (selectedLocation) {
-        filtered = filtered.filter((u) => u.location === selectedLocation);
+        filtered = filtered.filter((u) => u.location === selectedLocation)
       }
 
-      setUniversities(filtered);
+      setUniversities(filtered)
     } catch (err) {
-      console.error(err);
-      setError(err.message || 'Failed to fetch universities.');
+      console.error(err)
+      setError(err.message || 'Failed to fetch universities.')
     } finally {
-      setLoading(false);
+      setLoading(false)
     }
-  };
+  }
 
   const handleSearch = (e) => {
-    e.preventDefault();
-  };
+    e.preventDefault()
+  }
 
   const getResultText = () => {
     if (searchQuery) {
-      return `Universities offering ${searchQuery}`;
+      return `Universities offering ${searchQuery}`
     }
-    return 'All Universities';
-  };
+    return 'All Universities'
+  }
 
   const getSubText = () => {
     if (searchQuery) {
-      return `Showing results for "${searchQuery}"`;
+      return `Showing results for "${searchQuery}"`
     }
-    return 'Browse all universities in the system';
-  };
+    return 'Browse all universities in the system'
+  }
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -112,7 +119,10 @@ const CourseSearch = () => {
 
           {/* Search Input */}
           <div className="mb-8">
-            <form onSubmit={handleSearch} className="relative max-w-2xl mx-auto mb-6">
+            <form
+              onSubmit={handleSearch}
+              className="relative max-w-2xl mx-auto mb-6"
+            >
               <input
                 type="text"
                 placeholder="Search for course..."
@@ -175,7 +185,9 @@ const CourseSearch = () => {
       {/* Results Section */}
       <div className="max-w-4xl mx-auto px-4 py-8">
         <div className="mb-8">
-          <h2 className="text-2xl font-bold text-gray-900 mb-2">{getResultText()}</h2>
+          <h2 className="text-2xl font-bold text-gray-900 mb-2">
+            {getResultText()}
+          </h2>
           <p className="text-gray-600">{getSubText()}</p>
         </div>
 
@@ -273,10 +285,7 @@ const CourseSearch = () => {
                       )}
                     </div> */}
                   </div>
-                  <ChevronDown
-                    className="text-gray-400 ml-4"
-                    size={20}
-                  />
+                  <ChevronDown className="text-gray-400 ml-4" size={20} />
                 </div>
               </div>
             ))}
@@ -289,13 +298,17 @@ const CourseSearch = () => {
             <div className="text-gray-400 mb-4">
               <Search size={48} className="mx-auto" />
             </div>
-            <h3 className="text-xl font-medium text-gray-900 mb-2">No universities found</h3>
-            <p className="text-gray-600">Try adjusting your search or filters.</p>
+            <h3 className="text-xl font-medium text-gray-900 mb-2">
+              No universities found
+            </h3>
+            <p className="text-gray-600">
+              Try adjusting your search or filters.
+            </p>
           </div>
         )}
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default CourseSearch;
+export default CourseSearch
