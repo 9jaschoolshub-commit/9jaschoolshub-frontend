@@ -1,5 +1,5 @@
-import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useState, useEffect } from 'react'
+import { useNavigate } from 'react-router-dom'
 import {
   MapPin,
   Search,
@@ -12,12 +12,13 @@ import {
   Monitor,
   Building2,
   Globe,
-} from "lucide-react";
-import { universityAPI } from "../services/universityApi";
-import topImage from "../assets/top-image.jpg";
-import bottomImage from "../assets/bottom-image.jpg";
-import academyJourney from "../assets/academy-journey.jpg";
-import UniversityCardSkeleton from "../components/UniversityCardSkeleton";
+} from 'lucide-react'
+import { universityAPI } from '../services/universityApi'
+import topImage from '../assets/top-image.jpg'
+import bottomImage from '../assets/bottom-image.jpg'
+import academyJourney from '../assets/academy-journey.jpg'
+import UniversityCardSkeleton from '../components/UniversityCardSkeleton'
+import useAllUniversities from '../hooks/useAllUniversities'
 const ICONS = [
   <Palette className="w-5 h-5 text-blue-600" />,
   <Scale className="w-5 h-5 text-green-600" />,
@@ -27,34 +28,34 @@ const ICONS = [
   <Monitor className="w-5 h-5 text-blue-600" />,
   <Building2 className="w-5 h-5 text-indigo-600" />,
   <Globe className="w-5 h-5 text-teal-600" />,
-];
+]
 const HomePage = () => {
-  const navigate = useNavigate();
-  const [searchInput, setSearchInput] = useState("");
-  const [universities, setUniversities] = useState([]);
-  const [disciplines, setDisciplines] = useState([]); // Will be generated from API
-  const [loading, setLoading] = useState(true);
+  const navigate = useNavigate()
+  const [searchInput, setSearchInput] = useState('')
+  const [universities, setUniversities] = useState([])
+  const [disciplines, setDisciplines] = useState([]) // Will be generated from API
+  const [loading, setLoading] = useState(true)
 
   // Fetch universities on mount
   useEffect(() => {
     const fetchUniversities = async () => {
       try {
-        setLoading(true);
-        const res = await universityAPI.getAllUniversities();
-        setUniversities(res.doc || []);
+        setLoading(true)
+        const res = await universityAPI.getAllUniversities()
+        setUniversities(res.doc || [])
 
         // Generate disciplines from faculties
-        const facultyMap = {};
+        const facultyMap = {}
         res.doc.forEach((uni) => {
           uni.notable_programs.forEach((program) => {
-            const faculty = program.Faculty;
+            const faculty = program.Faculty
             if (!facultyMap[faculty]) {
               facultyMap[faculty] = {
                 title: faculty,
                 courses: [],
                 color: getRandomColor(), // Assign random bg or use a map
                 icons: ICONS,
-              };
+              }
             }
             // Add up to 3 unique courses
             program.Courses.forEach((courseObj) => {
@@ -62,55 +63,55 @@ const HomePage = () => {
                 !facultyMap[faculty].courses.includes(courseObj.course) &&
                 facultyMap[faculty].courses.length < 5
               ) {
-                facultyMap[faculty].courses.push(courseObj.course);
+                facultyMap[faculty].courses.push(courseObj.course)
               }
-            });
-          });
-        });
+            })
+          })
+        })
 
         // Convert to array for rendering
-        setDisciplines(Object.values(facultyMap));
+        setDisciplines(Object.values(facultyMap))
       } catch (err) {
-        console.error("Failed to load universities:", err);
+        console.error('Failed to load universities:', err)
         // Fallback to empty
-        setUniversities([]);
-        setDisciplines([]);
+        setUniversities([])
+        setDisciplines([])
       } finally {
-        setLoading(false);
+        setLoading(false)
       }
-    };
+    }
 
-    fetchUniversities();
-  }, []);
+    fetchUniversities()
+  }, [])
 
   const handleSearch = (e) => {
-    e.preventDefault();
-    if (!searchInput.trim()) return;
-    navigate(`/universities?search=${encodeURIComponent(searchInput.trim())}`);
-  };
+    e.preventDefault()
+    if (!searchInput.trim()) return
+    navigate(`/universities?search=${encodeURIComponent(searchInput.trim())}`)
+  }
 
   const handleSearchByFaculty = (facultyName) => {
-    navigate(`/courses?search=${encodeURIComponent(facultyName)}`);
-  };
+    navigate(`/courses?search=${encodeURIComponent(facultyName)}`)
+  }
 
   const getRandomColor = () => {
     const colors = [
-      "bg-blue-50",
-      "bg-green-50",
-      "bg-purple-50",
-      "bg-yellow-50",
-      "bg-pink-50",
-      "bg-indigo-50",
-      "bg-red-50",
-      "bg-teal-50",
-    ];
-    return colors[Math.floor(Math.random() * colors.length)];
-  };
+      'bg-blue-50',
+      'bg-green-50',
+      'bg-purple-50',
+      'bg-yellow-50',
+      'bg-pink-50',
+      'bg-indigo-50',
+      'bg-red-50',
+      'bg-teal-50',
+    ]
+    return colors[Math.floor(Math.random() * colors.length)]
+  }
 
   const truncateCourses = (courses, max = 3) => {
-    if (courses.length <= max) return courses.join(", ");
-    return `${courses.slice(0, max).join(", ")} +${courses.length - max} more`;
-  };
+    if (courses.length <= max) return courses.join(', ')
+    return `${courses.slice(0, max).join(', ')} +${courses.length - max} more`
+  }
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -219,7 +220,7 @@ const HomePage = () => {
           <div className="text-center">
             <button
               className="bg-orange-400 text-white px-8 py-3 rounded-lg font-semibold hover:bg-orange-600 transition"
-              onClick={() => navigate("/courses")}
+              onClick={() => navigate('/courses')}
             >
               View All Disciplines
             </button>
@@ -232,7 +233,9 @@ const HomePage = () => {
         <section className="py-16 bg-gray-50">
           <div className="max-w-7xl mx-auto px-4">
             <div className="grid md:grid-cols-3 gap-8 mb-12">
-              {[...Array(3)].map((_, i) => <UniversityCardSkeleton key={i} />)}
+              {[...Array(3)].map((_, i) => (
+                <UniversityCardSkeleton key={i} />
+              ))}
             </div>
           </div>
         </section>
@@ -260,9 +263,9 @@ const HomePage = () => {
                       {university.type && (
                         <span
                           className={`px-3 py-1 rounded-full text-xs font-semibold ${
-                            university.type === "Private"
-                              ? "bg-blue-100 text-blue-800"
-                              : "bg-green-100 text-green-800"
+                            university.type === 'Private'
+                              ? 'bg-blue-100 text-blue-800'
+                              : 'bg-green-100 text-green-800'
                           }`}
                         >
                           {university.type}
@@ -283,7 +286,7 @@ const HomePage = () => {
                       <div>
                         <span className="text-gray-500">Tuition Fee</span>
                         <div className="font-semibold">
-                          {university.school_fees_range || "N/A"}
+                          {university.school_fees_range || 'N/A'}
                         </div>
                       </div>
                     </div>
@@ -331,7 +334,7 @@ const HomePage = () => {
             <div className="text-center">
               <button
                 className="bg-orange-400 text-white px-8 py-3 rounded-lg font-semibold hover:bg-orange-600 transition"
-                onClick={() => navigate("/universities")}
+                onClick={() => navigate('/universities')}
               >
                 View All Universities
               </button>
@@ -369,7 +372,7 @@ const HomePage = () => {
         </div>
       </section>
     </div>
-  );
-};
+  )
+}
 
-export default HomePage;
+export default HomePage
