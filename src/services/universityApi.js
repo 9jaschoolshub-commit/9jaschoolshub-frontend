@@ -52,8 +52,8 @@ export const universityAPI = {
   // Get all universities
   getAllUniversities: async () => {
     try {
-      const response = await api.get('/universityRoute')
-      return response.data.data
+      const response = await api.get('universityRoute')
+      return response.data
     } catch (error) {
       throw new Error(
         error.response?.data?.message || 'Failed to fetch universities.'

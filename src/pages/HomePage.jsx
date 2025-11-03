@@ -14,11 +14,12 @@ import {
   Globe,
 } from 'lucide-react'
 import { universityAPI } from '../services/universityApi'
-import topImage from '../assets/top-image.jpg'
-import bottomImage from '../assets/bottom-image.jpg'
-import academyJourney from '../assets/academy-journey.jpg'
-import UniversityCardSkeleton from '../components/UniversityCardSkeleton'
+import topImage from '../assets/images/top-image.jpg'
+import bottomImage from '../assets/images/bottom-image.jpg'
+import academyJourney from '../assets/images/academy-journey.jpg'
+import UniversityCardSkeleton from '../components/fallback/UniversityCardSkeleton'
 import useAllUniversities from '../hooks/useAllUniversities'
+import axios from 'axios'
 const ICONS = [
   <Palette className="w-5 h-5 text-blue-600" />,
   <Scale className="w-5 h-5 text-green-600" />,
@@ -112,6 +113,11 @@ const HomePage = () => {
     if (courses.length <= max) return courses.join(', ')
     return `${courses.slice(0, max).join(', ')} +${courses.length - max} more`
   }
+  const getAllUniversities = () => {
+    const { data } = useAllUniversities()
+    console.log(data)
+  }
+  getAllUniversities()
 
   return (
     <div className="min-h-screen bg-gray-50">

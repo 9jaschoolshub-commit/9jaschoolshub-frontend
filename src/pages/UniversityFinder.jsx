@@ -1,35 +1,35 @@
-import { useState, useEffect } from "react";
-import { useNavigate, useLocation } from "react-router-dom";
-import { Search, MapPin } from "lucide-react";
-import Slider from "react-slick";
-import "slick-carousel/slick/slick.css";
-import "slick-carousel/slick/slick-theme.css";
-import { universityAPI } from "../services/universityApi";
-import UniversityCardSkeleton from "../components/UniversityCardSkeleton";
-import uniImage1 from "../assets/uni1.webp";
-import uniImage2 from "../assets/uni2.jpg";
-import uniImage3 from "../assets/uni3.jpg";
-import uniImage4 from "../assets/uni4.jpg";
-import uniImage5 from "../assets/uni5.jpg";
+import { useState, useEffect } from 'react'
+import { useNavigate, useLocation } from 'react-router-dom'
+import { Search, MapPin } from 'lucide-react'
+import Slider from 'react-slick'
+import 'slick-carousel/slick/slick.css'
+import 'slick-carousel/slick/slick-theme.css'
+import { universityAPI } from '../services/universityApi'
+import UniversityCardSkeleton from '../components/fallback/UniversityCardSkeleton'
+import uniImage1 from '../assets/images/uni1.webp'
+import uniImage2 from '../assets/images/uni2.jpg'
+import uniImage3 from '../assets/images/uni3.jpg'
+import uniImage4 from '../assets/images/uni4.jpg'
+import uniImage5 from '../assets/images/uni5.jpg'
 
 const UniversityFinder = () => {
-  const navigate = useNavigate();
-  const location = useLocation();
+  const navigate = useNavigate()
+  const location = useLocation()
 
-  const [universities, setUniversities] = useState([]);
-  const [filteredUniversities, setFilteredUniversities] = useState([]);
-  const [searchQuery, setSearchQuery] = useState("");
-  const [selectedType, setSelectedType] = useState("");
-  const [selectedLocation, setSelectedLocation] = useState("");
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-  const [result, setResult] = useState([]);
-  const [visibleCount, setVisibleCount] = useState(9);
-  const [inputValue, setInputValue] = useState("");
+  const [universities, setUniversities] = useState([])
+  const [filteredUniversities, setFilteredUniversities] = useState([])
+  const [searchQuery, setSearchQuery] = useState('')
+  const [selectedType, setSelectedType] = useState('')
+  const [selectedLocation, setSelectedLocation] = useState('')
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState(null)
+  const [result, setResult] = useState([])
+  const [visibleCount, setVisibleCount] = useState(9)
+  const [inputValue, setInputValue] = useState('')
 
   // Extract ?search=query from URL
-  const queryParams = new URLSearchParams(location.search);
-  const searchTerm = queryParams.get("search");
+  const queryParams = new URLSearchParams(location.search)
+  const searchTerm = queryParams.get('search')
 
   // Sample university images for the carousel
   const universityImages = [
@@ -38,7 +38,7 @@ const UniversityFinder = () => {
     uniImage3,
     uniImage4,
     uniImage5,
-  ];
+  ]
 
   const sliderSettings = {
     dots: true,
@@ -58,46 +58,46 @@ const UniversityFinder = () => {
     customPaging: () => (
       <div className="size-2 rounded-full bg-gray-300/50 transition-colors duration-300"></div>
     ),
-    dotsClass: "slick-dots custom-dots",
-  };
+    dotsClass: 'slick-dots custom-dots',
+  }
 
   // Fetch universities on component mount
   useEffect(() => {
     const fetchHomeUniversities = async () => {
-      if (!searchTerm) return;
+      if (!searchTerm) return
 
       try {
-        const data = await universityAPI.searchUniversities(searchTerm);
-        setResult(data.doc);
+        const data = await universityAPI.searchUniversities(searchTerm)
+        setResult(data.doc)
       } catch (err) {
-        setError(err.message);
+        setError(err.message)
       } finally {
-        setLoading(false);
+        setLoading(false)
       }
-    };
+    }
 
     const fetchUniversities = async () => {
       try {
-        setLoading(true);
-        const response = await universityAPI.getAllUniversities();
-        setUniversities(response.doc);
-        setFilteredUniversities(response.doc);
-        console.log(response);
-        setError(null);
+        setLoading(true)
+        const response = await universityAPI.getAllUniversities()
+        setUniversities(response.doc)
+        setFilteredUniversities(response.doc)
+        console.log(response)
+        setError(null)
       } catch (err) {
-        setError(err.message);
-        console.error("Failed to fetch universities:", err);
+        setError(err.message)
+        console.error('Failed to fetch universities:', err)
       } finally {
-        setLoading(false);
+        setLoading(false)
       }
-    };
+    }
 
-    fetchHomeUniversities, fetchUniversities();
-  }, [searchTerm]);
+    fetchHomeUniversities, fetchUniversities()
+  }, [searchTerm])
 
   // Filter universities based on search and filters
   useEffect(() => {
-    let filtered = universities;
+    let filtered = universities
 
     // Search filter
     if (searchQuery) {
@@ -112,7 +112,7 @@ const UniversityFinder = () => {
           university.notable_programs.some((programme) =>
             programme.toLowerCase().includes(searchQuery.toLowerCase())
           )
-      );
+      )
     }
 
     // Type filter
@@ -120,7 +120,7 @@ const UniversityFinder = () => {
       filtered = filtered.filter(
         (university) =>
           university.type.toLowerCase() === selectedType.toLowerCase()
-      );
+      )
     }
 
     // Location filter
@@ -129,57 +129,57 @@ const UniversityFinder = () => {
         university.location
           .toLowerCase()
           .includes(selectedLocation.toLowerCase())
-      );
+      )
     }
 
-    setFilteredUniversities(filtered);
-  }, [universities, searchQuery, selectedType, selectedLocation]);
+    setFilteredUniversities(filtered)
+  }, [universities, searchQuery, selectedType, selectedLocation])
 
   // Handle search
   const handleSearch = async (e) => {
-    e.preventDefault();
+    e.preventDefault()
 
-    setSearchQuery(inputValue);
-    if (!inputValue.trim()) return;
+    setSearchQuery(inputValue)
+    if (!inputValue.trim()) return
 
     try {
-      setLoading(true);
-      const response = await universityAPI.searchUniversities(inputValue);
-      setFilteredUniversities(response.doc);
-      setError(null);
+      setLoading(true)
+      const response = await universityAPI.searchUniversities(inputValue)
+      setFilteredUniversities(response.doc)
+      setError(null)
     } catch (err) {
-      setError(err.message);
-      console.error("Search failed:", err);
+      setError(err.message)
+      console.error('Search failed:', err)
     } finally {
-      setLoading(false);
+      setLoading(false)
     }
-  };
+  }
 
   const handleSearchFromQuery = async (query) => {
     try {
-      setLoading(true);
-      const response = await universityAPI.searchUniversities(query);
-      setFilteredUniversities(response.doc);
-      setError(null);
+      setLoading(true)
+      const response = await universityAPI.searchUniversities(query)
+      setFilteredUniversities(response.doc)
+      setError(null)
     } catch (err) {
-      setError(err.message);
+      setError(err.message)
     } finally {
-      setLoading(false);
+      setLoading(false)
     }
-  };
+  }
 
   const handleUniversityClick = (id) => {
-    navigate(`/university/${id}`);
-  };
+    navigate(`/university/${id}`)
+  }
 
   // Hnader to load more universities
   const handleViewMore = () => {
-    setVisibleCount((prevCount) => prevCount + 9);
-  };
+    setVisibleCount((prevCount) => prevCount + 9)
+  }
 
   // Get unique types and locations for filters
-  const uniqueTypes = [...new Set(universities.map((uni) => uni.type))];
-  const uniqueLocations = [...new Set(universities.map((uni) => uni.location))];
+  const uniqueTypes = [...new Set(universities.map((uni) => uni.type))]
+  const uniqueLocations = [...new Set(universities.map((uni) => uni.location))]
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -221,7 +221,7 @@ const UniversityFinder = () => {
               placeholder="Search University by name..."
               value={inputValue}
               onChange={(e) => setInputValue(e.target.value)}
-              onKeyDown={(e) => e.key === "Enter" && handleSearch(e)}
+              onKeyDown={(e) => e.key === 'Enter' && handleSearch(e)}
               className="w-full px-6 py-3 text-lg border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-400 focus:border-transparent pr-12"
             />
             <button
@@ -289,12 +289,14 @@ const UniversityFinder = () => {
       <div className="max-w-7xl mx-auto px-4 py-12">
         {loading ? (
           <section className="py-16 bg-gray-50">
-          <div className="max-w-7xl mx-auto px-4">
-            <div className="grid md:grid-cols-3 gap-8 mb-12">
-              {[...Array(9)].map((_, i) => <UniversityCardSkeleton key={i} />)}
+            <div className="max-w-7xl mx-auto px-4">
+              <div className="grid md:grid-cols-3 gap-8 mb-12">
+                {[...Array(9)].map((_, i) => (
+                  <UniversityCardSkeleton key={i} />
+                ))}
+              </div>
             </div>
-          </div>
-        </section>
+          </section>
         ) : error ? (
           <div className="text-center py-12">
             <p className="text-red-600 mb-4">{error}</p>
@@ -346,11 +348,11 @@ const UniversityFinder = () => {
                   <div className="mb-3">
                     <span
                       className={`inline-block px-3 py-1 rounded-full text-xs font-medium ${
-                        university.type === "Federal"
-                          ? "bg-green-100 text-green-800"
-                          : university.type === "State"
-                          ? "bg-yellow-100 text-yellow-800"
-                          : "bg-blue-100 text-blue-800"
+                        university.type === 'Federal'
+                          ? 'bg-green-100 text-green-800'
+                          : university.type === 'State'
+                          ? 'bg-yellow-100 text-yellow-800'
+                          : 'bg-blue-100 text-blue-800'
                       }`}
                     >
                       {university.type}
@@ -383,7 +385,7 @@ const UniversityFinder = () => {
                   <div className="flex justify-between items-center">
                     <a
                       href={
-                        university.website.startsWith("https://")
+                        university.website.startsWith('https://')
                           ? university.website
                           : `https://${university.website}`
                       }
@@ -415,7 +417,7 @@ const UniversityFinder = () => {
         </button>
       )}
     </div>
-  );
-};
+  )
+}
 
-export default UniversityFinder;
+export default UniversityFinder

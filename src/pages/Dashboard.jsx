@@ -1,48 +1,48 @@
-import { useState, useEffect } from "react";
-import { universityAPI } from "../services/universityApi";
-import { getApiKeyFromServer } from "../services/apiKeyService";
+import { useState, useEffect } from 'react'
+import { universityAPI } from '../services/universityApi'
+import { getApiKeyFromServer } from '../services/apiKeyService'
 import {
   SignedIn,
   SignedOut,
   SignInButton,
   UserButton,
   useAuth,
-} from "@clerk/clerk-react";
-import filterData from "../data/filterData";
-import { toast } from "react-toastify";
-import sideImage from "../assets/bottom-image.jpg";
+} from '@clerk/clerk-react'
+import filterData from '../data/filterData'
+import { toast } from 'react-toastify'
+import sideImage from '../assets/images/bottom-image.jpg'
 // import useStore from "../hooks/useStore";
 
 export default function Dashboard() {
   const [formData, setFormData] = useState({
-    universityId: "",
-    unversityName: "",
-    type: "Federal",
-    location: "Lagos",
-    programmes: "",
-    schoolFees: "",
-    website: "",
-    email: "",
-    phone: "",
-    requirements: "",
-    notes: "",
+    universityId: '',
+    unversityName: '',
+    type: 'Federal',
+    location: 'Lagos',
+    programmes: '',
+    schoolFees: '',
+    website: '',
+    email: '',
+    phone: '',
+    requirements: '',
+    notes: '',
     image: null,
-  });
-  const [loading, setLoading] = useState(false);
-  const [actionType, setActionType] = useState("add");
-  const [searchQuery, setSearchQuery] = useState("");
-  const [searchResults, setSearchResults] = useState([]);
-  const [selectedUniversity, setSelectedUniversity] = useState(null);
-  const { getToken, isSignedIn } = useAuth();
+  })
+  const [loading, setLoading] = useState(false)
+  const [actionType, setActionType] = useState('add')
+  const [searchQuery, setSearchQuery] = useState('')
+  const [searchResults, setSearchResults] = useState([])
+  const [selectedUniversity, setSelectedUniversity] = useState(null)
+  const { getToken, isSignedIn } = useAuth()
 
   const actionTypes = [
-    { option: "add", label: "add university" },
-    { option: "update", label: "update university" },
-    { option: "delete", label: "delete university" },
-  ];
+    { option: 'add', label: 'add university' },
+    { option: 'update', label: 'update university' },
+    { option: 'delete', label: 'delete university' },
+  ]
 
-  const uniLocation = filterData.universityLocation;
-  const uniType = filterData.universityType;
+  const uniLocation = filterData.universityLocation
+  const uniType = filterData.universityType
 
   useEffect(() => {
     const setup = async () => {
@@ -53,62 +53,62 @@ export default function Dashboard() {
           // save to Zustand logic here
 
           // Fetch and save API key
-          await getApiKeyFromServer();
+          await getApiKeyFromServer()
         } catch (error) {
-          toast.error("Failed to initialize admin session.");
-          console.error("error message:", error);
+          toast.error('Failed to initialize admin session.')
+          console.error('error message:', error)
         }
       }
-    };
-    setup();
-  }, [isSignedIn, getToken]);
+    }
+    setup()
+  }, [isSignedIn, getToken])
 
   const handleChange = (e) => {
     if (!e.isTrusted) {
-      return;
+      return
     }
 
-    const { name, value, type, files } = e.target;
+    const { name, value, type, files } = e.target
     setFormData((prev) => ({
       ...prev,
-      [name]: type === "file" ? files[0] : value,
-    }));
-  };
+      [name]: type === 'file' ? files[0] : value,
+    }))
+  }
 
   const handleSearchChange = (e) => {
-    setSearchQuery(e.target.value);
+    setSearchQuery(e.target.value)
     // Clear selected university and results if search query changes
-    setSelectedUniversity(null);
-    setSearchResults([]);
-  };
+    setSelectedUniversity(null)
+    setSearchResults([])
+  }
 
   const handleSearch = async () => {
     if (!searchQuery.trim()) {
-      setSearchResults([]);
-      return;
+      setSearchResults([])
+      return
     }
-    setLoading(true);
+    setLoading(true)
     try {
-      const results = await universityAPI.searchUniversities(searchQuery);
-      console.log("search results:", results);
+      const results = await universityAPI.searchUniversities(searchQuery)
+      console.log('search results:', results)
 
-      setSearchResults(results.data || []);
+      setSearchResults(results.data || [])
     } catch (error) {
-      if (error.message === "No universities match your search criteria.") {
-        setSearchResults([]); // Ensure results are cleared
-        toast.info("No universities found matching your search.");
+      if (error.message === 'No universities match your search criteria.') {
+        setSearchResults([]) // Ensure results are cleared
+        toast.info('No universities found matching your search.')
       } else {
-        toast.error("Failed to search university.");
-        console.error("Search error:", error);
-        setSearchResults([]);
+        toast.error('Failed to search university.')
+        console.error('Search error:', error)
+        setSearchResults([])
       }
     } finally {
-      setLoading(false);
+      setLoading(false)
     }
-  };
+  }
 
   const handleSelectUniversity = (university) => {
-    setSelectedUniversity(university);
+    setSelectedUniversity(university)
     setFormData({
       universityId: university._id,
       unversityName: university.university_name,
@@ -117,169 +117,169 @@ export default function Dashboard() {
       // Flatten the courses from all faculties into a single string
       programmes: university.notable_programs
         .flatMap((faculty) => faculty.Courses.map((course) => course.course))
-        .join(", "),
+        .join(', '),
       schoolFees: university.school_fees_range,
       website: university.website,
       email: university.email,
       phone: university.phone_number,
       // Requirements are nested inside courses, so we can't easily populate this.
       // will address later
-      requirements: "",
+      requirements: '',
       notes: university.notes,
       image: null,
-    });
-  };
+    })
+  }
 
   const handleCsvUpload = () => {
     // This is a placeholder for the CSV upload logic.
 
-    toast.info("CSV upload functionality is not yet implemented.");
-  };
+    toast.info('CSV upload functionality is not yet implemented.')
+  }
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
-    setLoading(true);
+    e.preventDefault()
+    setLoading(true)
 
     try {
-      if (actionType === "add") {
-        const payload = new FormData();
-        payload.append("UniversityName", formData.unversityName);
-        payload.append("type", formData.type);
-        payload.append("location", formData.location);
+      if (actionType === 'add') {
+        const payload = new FormData()
+        payload.append('UniversityName', formData.unversityName)
+        payload.append('type', formData.type)
+        payload.append('location', formData.location)
         payload.append(
-          "programmes",
+          'programmes',
           formData.programmes
-            .split(",")
+            .split(',')
             .map((course) => course.trim())
-            .join(",")
-        );
-        payload.append("schoolFees", formData.schoolFees);
-        payload.append("website", formData.website);
-        payload.append("email", formData.email);
-        payload.append("phone", formData.phone);
+            .join(',')
+        )
+        payload.append('schoolFees', formData.schoolFees)
+        payload.append('website', formData.website)
+        payload.append('email', formData.email)
+        payload.append('phone', formData.phone)
         payload.append(
-          "requirements",
+          'requirements',
           formData.requirements
-            .split(",")
+            .split(',')
             .map((item) => item.trim())
-            .join(",")
-        );
-        payload.append("notes", formData.notes);
+            .join(',')
+        )
+        payload.append('notes', formData.notes)
         if (formData.image) {
-          payload.append("image", formData.image);
+          payload.append('image', formData.image)
         }
 
-        await universityAPI.createUniversity(payload);
-        toast.success("University created successfully!");
-        resetForm();
-      } else if (actionType === "update") {
+        await universityAPI.createUniversity(payload)
+        toast.success('University created successfully!')
+        resetForm()
+      } else if (actionType === 'update') {
         if (!formData.universityId) {
-          toast.error("Please enter a University to update.");
-          return;
+          toast.error('Please enter a University to update.')
+          return
         }
 
-        const payload = new FormData();
+        const payload = new FormData()
 
         // Compare formData with selectedUniversity and append only changed fields
         if (formData.unversityName !== selectedUniversity.university_name) {
-          payload.append("UniversityName", formData.unversityName);
+          payload.append('UniversityName', formData.unversityName)
         }
         if (formData.type !== selectedUniversity.type) {
-          payload.append("type", formData.type);
+          payload.append('type', formData.type)
         }
         if (formData.location !== selectedUniversity.location) {
-          payload.append("location", formData.location);
+          payload.append('location', formData.location)
         }
 
         const originalProgrammes = selectedUniversity.notable_programs
           .flatMap((faculty) => faculty.Courses.map((course) => course.course))
-          .join(", ");
+          .join(', ')
         if (formData.programmes !== originalProgrammes) {
           payload.append(
-            "programmes",
+            'programmes',
             formData.programmes
-              .split(",")
+              .split(',')
               .map((c) => c.trim())
-              .join(",")
-          );
+              .join(',')
+          )
         }
 
         if (formData.schoolFees !== selectedUniversity.school_fees_range) {
-          payload.append("schoolFees", formData.schoolFees);
+          payload.append('schoolFees', formData.schoolFees)
         }
         if (formData.website !== selectedUniversity.website) {
-          payload.append("website", formData.website);
+          payload.append('website', formData.website)
         }
         if (formData.email !== selectedUniversity.email) {
-          payload.append("email", formData.email);
+          payload.append('email', formData.email)
         }
         if (formData.phone !== selectedUniversity.phone_number) {
-          payload.append("phone", formData.phone);
+          payload.append('phone', formData.phone)
         }
         if (formData.notes !== selectedUniversity.notes) {
-          payload.append("notes", formData.notes);
+          payload.append('notes', formData.notes)
         }
         // Requirements are not pre-filled, so any input is considered a change
         if (formData.requirements) {
           payload.append(
-            "requirements",
+            'requirements',
             formData.requirements
-              .split(",")
+              .split(',')
               .map((r) => r.trim())
-              .join(",")
-          );
+              .join(',')
+          )
         }
         // Always append a new image if one is selected
         if (formData.image) {
-          payload.append("image", formData.image);
+          payload.append('image', formData.image)
         }
 
-        await universityAPI.updateUniversity(formData.universityId, payload);
-        toast.success("University updated successfully!");
-        resetForm();
-      } else if (actionType === "delete") {
+        await universityAPI.updateUniversity(formData.universityId, payload)
+        toast.success('University updated successfully!')
+        resetForm()
+      } else if (actionType === 'delete') {
         if (!formData.universityId) {
-          toast.error("Please enter a University ID to delete.");
-          return;
+          toast.error('Please enter a University ID to delete.')
+          return
         }
         if (
-          window.confirm("Are you sure you want to delete this university?")
+          window.confirm('Are you sure you want to delete this university?')
         ) {
-          await universityAPI.deleteUniversity(formData.universityId);
-          toast.success("University deleted successfully!");
-          resetForm();
+          await universityAPI.deleteUniversity(formData.universityId)
+          toast.success('University deleted successfully!')
+          resetForm()
         }
       }
     } catch (error) {
-      toast.error(error.message || `Failed to ${actionType} university`);
+      toast.error(error.message || `Failed to ${actionType} university`)
     } finally {
-      setLoading(false);
+      setLoading(false)
     }
-  };
+  }
 
   const resetForm = () => {
     setFormData({
-      universityId: "",
-      unversityName: "",
-      type: "Federal",
-      location: "Lagos",
-      programmes: "",
-      schoolFees: "",
-      website: "",
-      email: "",
-      phone: "",
-      requirements: "",
-      notes: "",
+      universityId: '',
+      unversityName: '',
+      type: 'Federal',
+      location: 'Lagos',
+      programmes: '',
+      schoolFees: '',
+      website: '',
+      email: '',
+      phone: '',
+      requirements: '',
+      notes: '',
       image: null,
-    });
-    setSelectedUniversity(null);
-    setSearchResults([]);
-    setSearchQuery("");
-  };
+    })
+    setSelectedUniversity(null)
+    setSearchResults([])
+    setSearchQuery('')
+  }
 
   // Determine if the university details form should be shown
   const showUniversityDetailsForm =
-    actionType === "add" || selectedUniversity !== null;
+    actionType === 'add' || selectedUniversity !== null
 
   return (
     <div>
@@ -311,8 +311,8 @@ export default function Dashboard() {
                 id="actionType"
                 value={actionType}
                 onChange={(e) => {
-                  setActionType(e.target.value);
-                  resetForm(); // Reset form when action type changes
+                  setActionType(e.target.value)
+                  resetForm() // Reset form when action type changes
                 }}
                 className="mt-4 px-3 py-2 border border-gray-300 rounded-lg cursor-pointer capitalize"
               >
@@ -323,7 +323,7 @@ export default function Dashboard() {
                 ))}
               </select>
 
-              {(actionType === "update" || actionType === "delete") && (
+              {(actionType === 'update' || actionType === 'delete') && (
                 <div className="mt-6 max-w-xl">
                   <label htmlFor="searchUniversity" className="font-semibold">
                     Search University by Name or Location
@@ -343,7 +343,7 @@ export default function Dashboard() {
                       disabled={loading}
                       className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600"
                     >
-                      {loading ? "Searching..." : "Search"}
+                      {loading ? 'Searching...' : 'Search'}
                     </button>
                   </div>
 
@@ -369,7 +369,7 @@ export default function Dashboard() {
                     </ul>
                   )}
 
-                  {actionType !== "add" && !selectedUniversity && (
+                  {actionType !== 'add' && !selectedUniversity && (
                     <p className="text-gray-600 mt-2">
                       Please search for and select a university to {actionType}.
                     </p>
@@ -382,7 +382,7 @@ export default function Dashboard() {
                   onSubmit={handleSubmit}
                   className="flex flex-col gap-4 mt-4"
                 >
-                  {actionType !== "delete" && (
+                  {actionType !== 'delete' && (
                     <>
                       <div className="flex flex-col gap-0.5 mt-4 max-w-xl">
                         <label htmlFor="university" className="font-semibold">
@@ -553,7 +553,7 @@ export default function Dashboard() {
                           className="px-3 py-2 border border-gray-300 rounded-lg"
                         />
                         {selectedUniversity?.image &&
-                          actionType === "update" && (
+                          actionType === 'update' && (
                             <>
                               <p className="text-sm text-gray-500 mt-1 mb-2">
                                 Current image (Upload a new one to replace)
@@ -570,7 +570,7 @@ export default function Dashboard() {
                   )}
 
                   <div className="flex justify-between items-center mt-6 max-w-xl">
-                    {actionType === "add" && (
+                    {actionType === 'add' && (
                       <button
                         type="button"
                         onClick={handleCsvUpload}
@@ -583,16 +583,16 @@ export default function Dashboard() {
                       type="submit"
                       disabled={loading}
                       className={`${
-                        actionType === "delete"
-                          ? "bg-red-600 hover:bg-red-800"
-                          : "bg-orange-400 hover:bg-orange-700"
+                        actionType === 'delete'
+                          ? 'bg-red-600 hover:bg-red-800'
+                          : 'bg-orange-400 hover:bg-orange-700'
                       } text-white px-4 py-2 rounded cursor-pointer ml-auto`}
                     >
                       {loading
-                        ? "Submitting..."
-                        : actionType === "delete"
-                        ? "Delete"
-                        : "Save"}
+                        ? 'Submitting...'
+                        : actionType === 'delete'
+                        ? 'Delete'
+                        : 'Save'}
                     </button>
                   </div>
                 </form>
@@ -611,5 +611,5 @@ export default function Dashboard() {
         </div>
       </SignedIn>
     </div>
-  );
+  )
 }
