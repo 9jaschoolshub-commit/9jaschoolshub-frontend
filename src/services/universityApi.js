@@ -5,6 +5,9 @@ const API_BASE_URL = import.meta.env.VITE_APP_API_URL
 
 const api = axios.create({
   baseURL: API_BASE_URL,
+  timeout: 60000, // 60 seconds
+  timeoutErrorMessage:
+    'The request timed out. Kindly try again or refresh your page',
 })
 
 api.interceptors.request.use(
@@ -52,7 +55,7 @@ export const universityAPI = {
   // Get all universities
   getAllUniversities: async () => {
     try {
-      const response = await api.get('universityRoute')
+      const response = await api.get('/universityRoute')
       return response.data
     } catch (error) {
       throw new Error(

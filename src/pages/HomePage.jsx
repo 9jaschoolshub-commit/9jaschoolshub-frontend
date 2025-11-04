@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useMemo } from 'react'
 import { useNavigate } from 'react-router-dom'
 import {
   MapPin,
@@ -13,13 +13,12 @@ import {
   Building2,
   Globe,
 } from 'lucide-react'
-import { universityAPI } from '../services/universityApi'
 import topImage from '../assets/images/top-image.jpg'
 import bottomImage from '../assets/images/bottom-image.jpg'
 import academyJourney from '../assets/images/academy-journey.jpg'
 import UniversityCardSkeleton from '../components/fallback/UniversityCardSkeleton'
 import useAllUniversities from '../hooks/useAllUniversities'
-import axios from 'axios'
+
 const ICONS = [
   <Palette className="w-5 h-5 text-blue-600" />,
   <Scale className="w-5 h-5 text-green-600" />,
@@ -30,60 +29,61 @@ const ICONS = [
   <Building2 className="w-5 h-5 text-indigo-600" />,
   <Globe className="w-5 h-5 text-teal-600" />,
 ]
+
 const HomePage = () => {
   const navigate = useNavigate()
   const [searchInput, setSearchInput] = useState('')
-  const [universities, setUniversities] = useState([])
-  const [disciplines, setDisciplines] = useState([]) // Will be generated from API
-  const [loading, setLoading] = useState(true)
 
-  // Fetch universities on mount
-  useEffect(() => {
-    const fetchUniversities = async () => {
-      try {
-        setLoading(true)
-        const res = await universityAPI.getAllUniversities()
-        setUniversities(res.doc || [])
+  const { data: universitiesResponse, isLoading } = useAllUniversities()
 
-        // Generate disciplines from faculties
-        const facultyMap = {}
-        res.doc.forEach((uni) => {
-          uni.notable_programs.forEach((program) => {
-            const faculty = program.Faculty
-            if (!facultyMap[faculty]) {
-              facultyMap[faculty] = {
-                title: faculty,
-                courses: [],
-                color: getRandomColor(), // Assign random bg or use a map
-                icons: ICONS,
-              }
-            }
-            // Add up to 3 unique courses
-            program.Courses.forEach((courseObj) => {
-              if (
-                !facultyMap[faculty].courses.includes(courseObj.course) &&
-                facultyMap[faculty].courses.length < 5
-              ) {
-                facultyMap[faculty].courses.push(courseObj.course)
-              }
-            })
-          })
-        })
+  const universities = useMemo(() => {
+    return universitiesResponse?.data?.doc || []
+  }, [universitiesResponse?.data?.doc])
 
-        // Convert to array for rendering
-        setDisciplines(Object.values(facultyMap))
-      } catch (err) {
-        console.error('Failed to load universities:', err)
-        // Fallback to empty
-        setUniversities([])
-        setDisciplines([])
-      } finally {
-        setLoading(false)
-      }
+  const disciplines = useMemo(() => {
+    if (!universities || universities.length === 0) {
+      return []
     }
 
-    fetchUniversities()
-  }, [])
+    const getRandomColor = () => {
+      const colors = [
+        'bg-blue-50',
+        'bg-green-50',
+        'bg-purple-50',
+        'bg-yellow-50',
+        'bg-pink-50',
+        'bg-indigo-50',
+        'bg-red-50',
+        'bg-teal-50',
+      ]
+      return colors[Math.floor(Math.random() * colors.length)]
+    }
+
+    const facultyMap = {}
+    universities.forEach((uni) => {
+      uni.notable_programs.forEach((program) => {
+        const faculty = program.Faculty
+        if (!facultyMap[faculty]) {
+          facultyMap[faculty] = {
+            title: faculty,
+            courses: [],
+            color: getRandomColor(),
+            icons: ICONS,
+          }
+        }
+        // Add up to 5 unique courses
+        program.Courses.forEach((courseObj) => {
+          if (
+            !facultyMap[faculty].courses.includes(courseObj.course) &&
+            facultyMap[faculty].courses.length < 5
+          ) {
+            facultyMap[faculty].courses.push(courseObj.course)
+          }
+        })
+      })
+    })
+    return Object.values(facultyMap)
+  }, [universities])
 
   const handleSearch = (e) => {
     e.preventDefault()
@@ -95,29 +95,10 @@ const HomePage = () => {
     navigate(`/courses?search=${encodeURIComponent(facultyName)}`)
   }
 
-  const getRandomColor = () => {
-    const colors = [
-      'bg-blue-50',
-      'bg-green-50',
-      'bg-purple-50',
-      'bg-yellow-50',
-      'bg-pink-50',
-      'bg-indigo-50',
-      'bg-red-50',
-      'bg-teal-50',
-    ]
-    return colors[Math.floor(Math.random() * colors.length)]
-  }
-
   const truncateCourses = (courses, max = 3) => {
     if (courses.length <= max) return courses.join(', ')
     return `${courses.slice(0, max).join(', ')} +${courses.length - max} more`
   }
-  const getAllUniversities = () => {
-    const { data } = useAllUniversities()
-    console.log(data)
-  }
-  getAllUniversities()
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -147,7 +128,11 @@ const HomePage = () => {
                   className="px-5 py-3 w-full rounded-lg border border-gray-400 focus:outline-none focus:ring-2 focus:ring-orange-400"
                   placeholder="Search University by name..."
                 />
-                <button className="absolute right-0 mr-5" type="submit">
+                <button
+                  className="absolute right-0 mr-5"
+                  type="submit"
+                  aria-label="Search for a university"
+                >
                   <Search className="text-slate-700 cursor-pointer" />
                 </button>
               </form>
@@ -156,7 +141,7 @@ const HomePage = () => {
               <div className="flex">
                 <img
                   src={topImage}
-                  alt="Students studying"
+                  alt="Two university students smiling and studying together"
                   className="w-1/2 rounded-2xl p-2"
                   loading="lazy"
                 />
@@ -166,7 +151,7 @@ const HomePage = () => {
                 <div className="w-1/2"></div>
                 <img
                   src={bottomImage}
-                  alt="Graduate student"
+                  alt="A student in graduation attire holding a certificate"
                   className="w-1/2 rounded-2xl p-2"
                   loading="lazy"
                 />
@@ -235,7 +220,7 @@ const HomePage = () => {
       </section>
 
       {/* Featured Universities Section */}
-      {loading ? (
+      {isLoading ? (
         <section className="py-16 bg-gray-50">
           <div className="max-w-7xl mx-auto px-4">
             <div className="grid md:grid-cols-3 gap-8 mb-12">
