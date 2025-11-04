@@ -9,9 +9,9 @@ const FooterLink = ({ heading, links }) => {
     >
       <h3 className="font-medium text-lg">{heading}</h3>
       <ul className="space-y-1.5 text-gray-50 ">
-        {links.map(({ url, label }) => {
+        {links.map(({ url, label }, index) => {
           return (
-            <li>
+            <li key={index}>
               <Link to={url}> {label}</Link>{' '}
             </li>
           )

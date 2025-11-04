@@ -76,10 +76,8 @@ const UniversityDetails = () => {
       {university && (
         <>
           <div className="flex flex-col gap-8 w-full">
-            <div className="bg-gray-100 px-6 md:px-20 flex flex-col sm:flex-row justify-center items-center gap-10 py-6 mx-auto w-full">
-              <div className="w-full">
-                <img src={university.image} alt={university.university_name} />
-              </div>
+            <div className="bg-gray-100 px-6 md:px-20 flex flex-col sm:flex-row justify-center items-center gap-10 py-6 mx-auto w-full md:w-1/2 rounded-md">
+              <img src={university.image} alt={university.university_name} />
               <div className="flex flex-col items-start gap-1 text-sm sm:text-base">
                 <h1 className="text-lg sm:text-2xl font-semibold text-black">
                   {university.university_name}
@@ -102,7 +100,7 @@ const UniversityDetails = () => {
               </div>
             </div>
             {/* Courses Offered */}
-            <div className="p-10 bg-gray-100">
+            <div className="p-10 bg-gray-100 rounded-md">
               <div className="max-w-5xl mx-auto flex flex-col justify-center items-center gap-6">
                 <h2 className="text-xl md:text-2xl font-semibold text-black">
                   Courses Offered in {university.university_name}

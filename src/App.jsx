@@ -1,16 +1,17 @@
-import HomePage from './pages/HomePage'
-import CourseSearch from './pages/CourseSearch'
-import UniversityDetails from './pages/UniversityDetails'
-import UniversityFinder from './pages/UniversityFinder'
-import Dashboard from './pages/Dashboard'
-import { createBrowserRouter, RouterProvider } from 'react-router-dom'
-import IndexLayout from './components/IndexLayout'
-import UniversitiesLayout from './components/UniversitiesLayout'
-import DashboardLayout from './components/DashboardLayout'
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
-import NotFound from './pages/NotFound'
-import PrivacyPolicy from './pages/PrivacyPolicy'
-import TermsOfService from './pages/TermsOfService'
+import HomePage from "./pages/HomePage";
+import CourseSearch from "./pages/CourseSearch";
+import UniversityDetails from "./pages/UniversityDetails";
+import UniversityFinder from "./pages/UniversityFinder";
+import Dashboard from "./pages/Dashboard";
+import NotFound from "./pages/NotFound";
+import PrivacyPolicy from "./pages/PrivacyPolicy";
+import TermsOfService from "./pages/TermsOfService";
+import Header from "./components/Header";
+import Footer from "./components/Footer"
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -18,64 +19,46 @@ const queryClient = new QueryClient({
       staleTime: 1000 * 60 * 5,
     },
   },
-})
+});
 
-const router = createBrowserRouter([
-  {
-    path: '/',
-    element: <IndexLayout />,
-    errorElement: <NotFound />,
-    children: [
-      {
-        index: true,
-        element: <HomePage />,
-      },
-      {
-        path: 'universities',
-        element: <UniversitiesLayout />,
-        children: [
-          {
-            index: true,
-            element: <UniversityFinder />,
-          },
-          {
-            path: ':universityName/:id',
-            element: <UniversityDetails />,
-          },
-        ],
-      },
-      {
-        path: 'courses',
-        element: <CourseSearch />,
-      },
-      {
-        path: 'privacy-policy',
-        index: <PrivacyPolicy />,
-      },
-      {
-        path: 'terms-of-service',
-        index: <TermsOfService />,
-      },
-      {
-        path: 'dashboard',
-        element: <DashboardLayout />,
-        children: [
-          {
-            index: true,
-            element: <Dashboard />,
-          },
-        ],
-      },
-    ],
-  },
-])
+const AppContent = () => {
+  return (
+    <>
+      <Header />
+      <Routes>
+        <Route path="/" element={<HomePage />} />
+        <Route path="/courses" element={<CourseSearch />} />
+        <Route path="/universities" element={<UniversityFinder />} />
+        <Route path="/University/:id" element={<UniversityDetails />} />
+        <Route path="/dashboard" element={<Dashboard />} />
+        <Route path="/terms-of-service" element={<TermsOfService />} />
+        <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+        <Route path="/*" element={<NotFound />} />
+      </Routes>
+      <Footer />
+      <ToastContainer
+        position="top-right"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+      />
+    </>
+  );
+};
 
 const App = () => {
   return (
     <QueryClientProvider client={queryClient}>
-      <RouterProvider router={router} />
+      <Router>
+        <AppContent />
+      </Router>
     </QueryClientProvider>
-  )
-}
+  );
+};
 
-export default App
+export default App;

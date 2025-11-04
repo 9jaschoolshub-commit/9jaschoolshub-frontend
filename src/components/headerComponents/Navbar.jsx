@@ -1,5 +1,5 @@
-import { navLinks } from '../assets/data'
-import NavLinks from './NavLinks'
+import { navLinks } from "../../data/navData";
+import NavLinks from "./NavLinks";
 
 const Navbar = () => {
   return (
@@ -8,6 +8,6 @@ const Navbar = () => {
         <NavLinks key={navLink.name} {...navLink} />
       ))}
     </nav>
-  )
-}
-export default Navbar
+  );
+};
+export default Navbar;

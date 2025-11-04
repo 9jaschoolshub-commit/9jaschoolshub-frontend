@@ -1,5 +1,5 @@
-import { useState, useMemo } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useMemo } from "react";
+import { useNavigate } from "react-router-dom";
 import {
   MapPin,
   Search,
@@ -12,12 +12,17 @@ import {
   Monitor,
   Building2,
   Globe,
-} from 'lucide-react'
-import topImage from '../assets/images/top-image.jpg'
-import bottomImage from '../assets/images/bottom-image.jpg'
-import academyJourney from '../assets/images/academy-journey.jpg'
-import UniversityCardSkeleton from '../components/UniversityCardSkeleton'
-import { useAllUniversities } from '../hooks/useQueries'
+} from "lucide-react";
+import topImage from "../assets/images/top-image.jpg";
+import bottomImage from "../assets/images/bottom-image.jpg";
+import academyJourney from "../assets/images/academy-journey.jpg";
+import {
+  coursesSectionInfo,
+  empowermentSectionInfo,
+} from "../data/homepageData";
+import UniversityCardSkeleton from "../components/UniversityCardSkeleton";
+import SearchBar from "../components/SearchBar";
+import { useAllUniversities } from "../hooks/useQueries";
 
 const ICONS = [
   <Palette className="w-5 h-5 text-blue-600" />,
@@ -28,48 +33,46 @@ const ICONS = [
   <Monitor className="w-5 h-5 text-blue-600" />,
   <Building2 className="w-5 h-5 text-indigo-600" />,
   <Globe className="w-5 h-5 text-teal-600" />,
-]
+];
 
 const HomePage = () => {
-  const navigate = useNavigate()
-  const [searchInput, setSearchInput] = useState('')
-
-  const { data: universitiesResponse, isLoading } = useAllUniversities()
+  const navigate = useNavigate();
+  const { data: universitiesResponse, isLoading } = useAllUniversities();
 
   const universities = useMemo(() => {
-    return universitiesResponse?.data?.doc || []
-  }, [universitiesResponse?.data?.doc])
+    return universitiesResponse?.data?.doc || [];
+  }, [universitiesResponse?.data?.doc]);
 
   const disciplines = useMemo(() => {
     if (!universities || universities.length === 0) {
-      return []
+      return [];
     }
 
     const getRandomColor = () => {
       const colors = [
-        'bg-blue-50',
-        'bg-green-50',
-        'bg-purple-50',
-        'bg-yellow-50',
-        'bg-pink-50',
-        'bg-indigo-50',
-        'bg-red-50',
-        'bg-teal-50',
-      ]
-      return colors[Math.floor(Math.random() * colors.length)]
-    }
+        "bg-blue-50",
+        "bg-green-50",
+        "bg-purple-50",
+        "bg-yellow-50",
+        "bg-pink-50",
+        "bg-indigo-50",
+        "bg-red-50",
+        "bg-teal-50",
+      ];
+      return colors[Math.floor(Math.random() * colors.length)];
+    };
 
-    const facultyMap = {}
+    const facultyMap = {};
     universities.forEach((uni) => {
       uni.notable_programs.forEach((program) => {
-        const faculty = program.Faculty
+        const faculty = program.Faculty;
         if (!facultyMap[faculty]) {
           facultyMap[faculty] = {
             title: faculty,
             courses: [],
             color: getRandomColor(),
             icons: ICONS,
-          }
+          };
         }
         // Add up to 5 unique courses
         program.Courses.forEach((courseObj) => {
@@ -77,28 +80,26 @@ const HomePage = () => {
             !facultyMap[faculty].courses.includes(courseObj.course) &&
             facultyMap[faculty].courses.length < 5
           ) {
-            facultyMap[faculty].courses.push(courseObj.course)
+            facultyMap[faculty].courses.push(courseObj.course);
           }
-        })
-      })
-    })
-    return Object.values(facultyMap)
-  }, [universities])
-
-  const handleSearch = (e) => {
-    e.preventDefault()
-    if (!searchInput.trim()) return
-    navigate(`/universities?search=${encodeURIComponent(searchInput.trim())}`)
-  }
+        });
+      });
+    });
+    return Object.values(facultyMap);
+  }, [universities]);
 
   const handleSearchByFaculty = (facultyName) => {
-    navigate(`/courses?search=${encodeURIComponent(facultyName)}`)
-  }
+    navigate(`/courses?search=${encodeURIComponent(facultyName)}`);
+  };
+
+  const handleSearch = (query) => {
+    navigate(`/universities?search=${encodeURIComponent(query.trim())}`);
+  };
 
   const truncateCourses = (courses, max = 3) => {
-    if (courses.length <= max) return courses.join(', ')
-    return `${courses.slice(0, max).join(', ')} +${courses.length - max} more`
-  }
+    if (courses.length <= max) return courses.join(", ");
+    return `${courses.slice(0, max).join(", ")} +${courses.length - max} more`;
+  };
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -117,25 +118,7 @@ const HomePage = () => {
                 Find up-to-date information on courses, admission requirements
                 and more with ease — all in one place.
               </p>
-              <form
-                className="relative flex items-center justify-center max-w-md"
-                onSubmit={handleSearch}
-              >
-                <input
-                  type="text"
-                  value={searchInput}
-                  onChange={(e) => setSearchInput(e.target.value)}
-                  className="px-5 py-3 w-full rounded-lg border border-gray-400 focus:outline-none focus:ring-2 focus:ring-orange-400"
-                  placeholder="Search University by name..."
-                />
-                <button
-                  className="absolute right-0 mr-5"
-                  type="submit"
-                  aria-label="Search for a university"
-                >
-                  <Search className="text-slate-700 cursor-pointer" />
-                </button>
-              </form>
+              <SearchBar onSubmit={handleSearch} />
             </div>
             <div className="relative">
               <div className="flex">
@@ -166,12 +149,9 @@ const HomePage = () => {
         <div className="max-w-7xl mx-auto px-4">
           <div className="text-center mb-12">
             <h2 className="text-4xl font-bold text-gray-900 mb-4">
-              Search Universities by Your Preferred Course
+              {coursesSectionInfo.title}
             </h2>
-            <p className="text-gray-600 text-lg">
-              Discover Universities in Nigeria by your chosen course, location
-              and type (Federal, State & Private)
-            </p>
+            <p className="text-gray-600 text-lg">{coursesSectionInfo.desc}</p>
           </div>
 
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
@@ -211,7 +191,7 @@ const HomePage = () => {
           <div className="text-center">
             <button
               className="bg-orange-400 text-white px-8 py-3 rounded-lg font-semibold hover:bg-orange-600 transition"
-              onClick={() => navigate('/courses')}
+              onClick={() => navigate("/courses")}
             >
               View All Disciplines
             </button>
@@ -254,9 +234,9 @@ const HomePage = () => {
                       {university.type && (
                         <span
                           className={`px-3 py-1 rounded-full text-xs font-semibold ${
-                            university.type === 'Private'
-                              ? 'bg-blue-100 text-blue-800'
-                              : 'bg-green-100 text-green-800'
+                            university.type === "Private"
+                              ? "bg-blue-100 text-blue-800"
+                              : "bg-green-100 text-green-800"
                           }`}
                         >
                           {university.type}
@@ -277,7 +257,7 @@ const HomePage = () => {
                       <div>
                         <span className="text-gray-500">Tuition Fee</span>
                         <div className="font-semibold">
-                          {university.school_fees_range || 'N/A'}
+                          {university.school_fees_range || "N/A"}
                         </div>
                       </div>
                     </div>
@@ -325,7 +305,7 @@ const HomePage = () => {
             <div className="text-center">
               <button
                 className="bg-orange-400 text-white px-8 py-3 rounded-lg font-semibold hover:bg-orange-600 transition"
-                onClick={() => navigate('/universities')}
+                onClick={() => navigate("/universities")}
               >
                 View All Universities
               </button>
@@ -340,16 +320,13 @@ const HomePage = () => {
           <div className="grid md:grid-cols-2 gap-12 items-center">
             <div>
               <h2 className="text-4xl font-bold text-gray-900 mb-6">
-                Empowering Your Academic Journey
+                {empowermentSectionInfo.title}
               </h2>
               <p className="text-gray-600 mb-6">
-                Our platform brings together reliable and updated information on
-                universities, programs, and entry requirements to help students,
-                parents and educators make informed decisions.
+                {empowermentSectionInfo.paragraph1}
               </p>
               <p className="text-gray-600">
-                Whether you are exploring your options or narrowing down your
-                choices, everything you need is in one place.
+                {empowermentSectionInfo.paragraph2}
               </p>
             </div>
             <div className="relative">
@@ -363,7 +340,7 @@ const HomePage = () => {
         </div>
       </section>
     </div>
-  )
-}
+  );
+};
 
-export default HomePage
+export default HomePage;

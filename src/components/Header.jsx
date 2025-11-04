@@ -1,7 +1,7 @@
-import Logo from './Logo'
-import Container from './Container'
-import Navbar from './Navbar'
-import { Menu } from 'lucide-react'
+import Logo from "./headerComponents/Logo";
+import Container from "./footerComponents/Container";
+import Navbar from "./headerComponents/Navbar";
+import { Menu } from "lucide-react";
 
 const Header = () => {
   return (
@@ -16,6 +16,6 @@ const Header = () => {
         </div>
       </header>
     </Container>
-  )
-}
-export default Header
+  );
+};
+export default Header;

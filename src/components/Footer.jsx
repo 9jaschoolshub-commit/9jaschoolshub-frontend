@@ -1,11 +1,11 @@
-import Logo from './Logo'
-import { contactOptions, footerLinks, socialLinks } from '../assets/data'
-import SocialLink from './SocialLink'
-import FooterLink from './FooterLink'
-import ContactOption from './ContactOption'
-import Copyright from './Copyright'
-import Container from './Container'
-import sqwads from '../assets/images/sqwads.png'
+import Logo from "./headerComponents/Logo";
+import { contactOptions, footerLinks, socialLinks } from "../data/footerData";
+import SocialLink from "./footerComponents/SocialLink";
+import FooterLink from "./footerComponents/FooterLink";
+import ContactOption from "./footerComponents/ContactOption";
+import Copyright from "./footerComponents/Copyright";
+import Container from "./footerComponents/Container";
+import sqwads from "../assets/images/sqwads.png";
 
 const Footer = () => {
   return (
@@ -45,7 +45,7 @@ const Footer = () => {
         <Copyright />
       </footer>
     </Container>
-  )
-}
+  );
+};
 
-export default Footer
+export default Footer;

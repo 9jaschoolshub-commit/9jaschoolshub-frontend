@@ -1,35 +1,32 @@
-import { useState, useEffect } from 'react'
-import { useNavigate, useLocation } from 'react-router-dom'
-import { Search, MapPin } from 'lucide-react'
-import Slider from 'react-slick'
-import 'slick-carousel/slick/slick.css'
-import 'slick-carousel/slick/slick-theme.css'
-import { universityAPI } from '../services/universityApi'
-import UniversityCardSkeleton from '../components/UniversityCardSkeleton'
-import uniImage1 from '../assets/images/uni1.webp'
-import uniImage2 from '../assets/images/uni2.jpg'
-import uniImage3 from '../assets/images/uni3.jpg'
-import uniImage4 from '../assets/images/uni4.jpg'
-import uniImage5 from '../assets/images/uni5.jpg'
+import { useState, useEffect, useMemo } from "react";
+import { useNavigate, useLocation } from "react-router-dom";
+import { MapPin } from "lucide-react";
+import Slider from "react-slick";
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
+import { universityAPI } from "../services/universityApi";
+import UniversityCardSkeleton from "../components/UniversityCardSkeleton";
+import SearchBar from "../components/SearchBar";
+import uniImage1 from "../assets/images/uni1.webp";
+import uniImage2 from "../assets/images/uni2.jpg";
+import uniImage3 from "../assets/images/uni3.jpg";
+import uniImage4 from "../assets/images/uni4.jpg";
+import uniImage5 from "../assets/images/uni5.jpg";
 
 const UniversityFinder = () => {
-  const navigate = useNavigate()
-  const location = useLocation()
-
-  const [universities, setUniversities] = useState([])
-  const [filteredUniversities, setFilteredUniversities] = useState([])
-  const [searchQuery, setSearchQuery] = useState('')
-  const [selectedType, setSelectedType] = useState('')
-  const [selectedLocation, setSelectedLocation] = useState('')
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState(null)
-  const [result, setResult] = useState([])
-  const [visibleCount, setVisibleCount] = useState(9)
-  const [inputValue, setInputValue] = useState('')
+  const location = useLocation();
+  const navigate = useNavigate();
+  const [allUniversities, setAllUniversities] = useState([]);
+  const [selectedType, setSelectedType] = useState("");
+  const [selectedLocation, setSelectedLocation] = useState("");
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+  const [visibleCount, setVisibleCount] = useState(9);
 
   // Extract ?search=query from URL
-  const queryParams = new URLSearchParams(location.search)
-  const searchTerm = queryParams.get('search')
+  const queryParams = new URLSearchParams(location.search);
+  const initialSearchTerm = queryParams.get("search") || "";
+  const [searchTerm, setSearchTerm] = useState(initialSearchTerm);
 
   // Sample university images for the carousel
   const universityImages = [
@@ -38,7 +35,7 @@ const UniversityFinder = () => {
     uniImage3,
     uniImage4,
     uniImage5,
-  ]
+  ];
 
   const sliderSettings = {
     dots: true,
@@ -58,128 +55,101 @@ const UniversityFinder = () => {
     customPaging: () => (
       <div className="size-2 rounded-full bg-gray-300/50 transition-colors duration-300"></div>
     ),
-    dotsClass: 'slick-dots custom-dots',
-  }
+    dotsClass: "slick-dots custom-dots",
+  };
 
   // Fetch universities on component mount
   useEffect(() => {
-    const fetchHomeUniversities = async () => {
-      if (!searchTerm) return
-
-      try {
-        const data = await universityAPI.searchUniversities(searchTerm)
-        setResult(data.doc)
-      } catch (err) {
-        setError(err.message)
-      } finally {
-        setLoading(false)
-      }
-    }
-
     const fetchUniversities = async () => {
       try {
-        setLoading(true)
-        const response = await universityAPI.getAllUniversities()
-        setUniversities(response.data.doc)
-        setFilteredUniversities(response.data.doc)
-        // console.log(response);
-        setError(null)
+        setLoading(true);
+        const response = await universityAPI.getAllUniversities();
+        setAllUniversities(response.data.doc);
+        setError("");
       } catch (err) {
-        setError(err.message)
-        console.error('Failed to fetch universities:', err)
+        setError(err.message);
+        console.error("Failed to fetch universities:", err);
       } finally {
-        setLoading(false)
+        setLoading(false);
       }
-    }
+    };
 
-    fetchHomeUniversities, fetchUniversities()
-  }, [searchTerm])
+    fetchUniversities();
+  }, []);
 
-  // Filter universities based on search and filters
-  useEffect(() => {
-    let filtered = universities
+  // Memoize filtered universities for performance
+  const filteredUniversities = useMemo(() => {
+    let filtered = allUniversities;
 
     // Search filter
-    if (searchQuery) {
+    if (searchTerm) {
       filtered = filtered.filter(
         (university) =>
           university.university_name
             .toLowerCase()
-            .includes(searchQuery.toLowerCase()) ||
-          university.location
-            .toLowerCase()
-            .includes(searchQuery.toLowerCase()) ||
-          university.notable_programs.some((programme) =>
-            programme.toLowerCase().includes(searchQuery.toLowerCase())
-          )
-      )
+            .includes(searchTerm.toLowerCase()) ||
+          university.location.toLowerCase().includes(searchTerm.toLowerCase())
+      );
     }
 
     // Type filter
     if (selectedType) {
       filtered = filtered.filter(
-        (university) =>
-          university.type.toLowerCase() === selectedType.toLowerCase()
-      )
+        (uni) => uni.type.toLowerCase() === selectedType.toLowerCase()
+      );
     }
 
     // Location filter
     if (selectedLocation) {
-      filtered = filtered.filter((university) =>
-        university.location
-          .toLowerCase()
-          .includes(selectedLocation.toLowerCase())
-      )
+      filtered = filtered.filter((uni) =>
+        uni.location.toLowerCase().includes(selectedLocation.toLowerCase())
+      );
     }
 
-    setFilteredUniversities(filtered)
-  }, [universities, searchQuery, selectedType, selectedLocation])
+    return filtered;
+  }, [allUniversities, searchTerm, selectedType, selectedLocation]);
 
-  // Handle search
-  const handleSearch = async (e) => {
-    e.preventDefault()
+  const handleSearch = (query) => {
+    setSearchTerm(query);
+    // Clear filters when a search is performed
+    setSelectedType("");
+    setSelectedLocation("");
+    // Update URL without reloading the page
+    navigate(`/universities?search=${encodeURIComponent(query)}`, {
+      replace: true,
+    });
+  };
 
-    setSearchQuery(inputValue)
-    if (!inputValue.trim()) return
+  const handleFilterChange = (setter) => (e) => {
+    const value = e.target.value;
+    setter(value);
 
-    try {
-      setLoading(true)
-      const response = await universityAPI.searchUniversities(inputValue)
-      setFilteredUniversities(response.doc)
-      setError(null)
-    } catch (err) {
-      setError(err.message)
-      console.error('Search failed:', err)
-    } finally {
-      setLoading(false)
+    // Clear search term when a filter is applied
+    if (value) {
+      setSearchTerm("");
+      // Remove search query from URL
+      navigate("/universities", { replace: true });
     }
-  }
-
-  const handleSearchFromQuery = async (query) => {
-    try {
-      setLoading(true)
-      const response = await universityAPI.searchUniversities(query)
-      setFilteredUniversities(response.doc)
-      setError(null)
-    } catch (err) {
-      setError(err.message)
-    } finally {
-      setLoading(false)
-    }
-  }
+  };
 
   const handleUniversityClick = (id) => {
-    navigate(`/university/${id}`)
-  }
+    navigate(`/university/${id}`);
+  };
 
-  // Hnader to load more universities
+  // Handler to load more universities
   const handleViewMore = () => {
-    setVisibleCount((prevCount) => prevCount + 9)
-  }
+    setVisibleCount((prevCount) => prevCount + 9);
+  };
 
   // Get unique types and locations for filters
-  const uniqueTypes = [...new Set(universities.map((uni) => uni.type))]
-  const uniqueLocations = [...new Set(universities.map((uni) => uni.location))]
+  const uniqueTypes = useMemo(
+    () => [...new Set(allUniversities.map((uni) => uni.type))],
+    [allUniversities]
+  );
+  const uniqueLocations = useMemo(
+    () => [...new Set(allUniversities.map((uni) => uni.location))],
+    [allUniversities]
+  );
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -190,7 +160,7 @@ const UniversityFinder = () => {
             find Nigerian universities with ease
           </h1>
           <p className="text-lg text-gray-600">
-            Browse by state, type or program to find the universities that fits
+            Browse by name, state or type to find the universities that fits
             your goals
           </p>
         </div>
@@ -215,28 +185,12 @@ const UniversityFinder = () => {
       <div className="max-w-4xl mx-auto px-4 mb-10">
         <div className="flex flex-col md:flex-row gap-4 items-center justify-center">
           {/* Search Bar */}
-          <div className="relative w-full md:w-auto md:flex-grow max-w-lg">
-            <input
-              type="text"
-              placeholder="Search University by name..."
-              value={inputValue}
-              onChange={(e) => setInputValue(e.target.value)}
-              onKeyDown={(e) => e.key === 'Enter' && handleSearch(e)}
-              className="w-full px-6 py-3 text-lg border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-400 focus:border-transparent pr-12"
-            />
-            <button
-              onClick={handleSearch}
-              className="absolute right-3 top-1/2 transform -translate-y-1/2 p-2 text-gray-500 hover:text-orange-500 cursor-pointer"
-            >
-              <Search size={24} />
-            </button>
-          </div>
-
+          <SearchBar onSubmit={handleSearch} initialQuery={searchTerm} />
           {/* Filter Dropdowns */}
           <div className="flex w-full md:w-auto gap-4">
             <select
               value={selectedType}
-              onChange={(e) => setSelectedType(e.target.value)}
+              onChange={handleFilterChange(setSelectedType)}
               className="w-1/2 md:w-auto px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-400 bg-white"
             >
               <option value="">Type</option>
@@ -249,7 +203,7 @@ const UniversityFinder = () => {
 
             <select
               value={selectedLocation}
-              onChange={(e) => setSelectedLocation(e.target.value)}
+              onChange={handleFilterChange(setSelectedLocation)}
               className="w-1/2 md:w-auto px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-400 bg-white"
             >
               <option value="">Location</option>
@@ -262,28 +216,6 @@ const UniversityFinder = () => {
           </div>
         </div>
       </div>
-
-      {(inputValue || searchTerm) && (
-        <div className="p-4">
-          <h1 className="text-2xl font-bold mb-4">
-            Search Results for "{inputValue || searchTerm}"
-          </h1>
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {result.map((uni) => (
-              <div key={uni._id} className="bg-white rounded-lg shadow-md p-4">
-                <h2 className="text-lg font-bold">{uni.university_name}</h2>
-                <p className="text-gray-600">{uni.location}</p>
-                <a
-                  href={`/university/${uni._id}`}
-                  className="text-orange-500 text-sm mt-2 inline-block"
-                >
-                  View Details →
-                </a>
-              </div>
-            ))}
-          </div>
-        </div>
-      )}
 
       {/* Universities Grid */}
       <div className="max-w-7xl mx-auto px-4 py-12">
@@ -348,11 +280,11 @@ const UniversityFinder = () => {
                   <div className="mb-3">
                     <span
                       className={`inline-block px-3 py-1 rounded-full text-xs font-medium ${
-                        university.type === 'Federal'
-                          ? 'bg-green-100 text-green-800'
-                          : university.type === 'State'
-                          ? 'bg-yellow-100 text-yellow-800'
-                          : 'bg-blue-100 text-blue-800'
+                        university.type === "Federal"
+                          ? "bg-green-100 text-green-800"
+                          : university.type === "State"
+                          ? "bg-yellow-100 text-yellow-800"
+                          : "bg-blue-100 text-blue-800"
                       }`}
                     >
                       {university.type}
@@ -385,7 +317,7 @@ const UniversityFinder = () => {
                   <div className="flex justify-between items-center">
                     <a
                       href={
-                        university.website.startsWith('https://')
+                        university.website.startsWith("https://")
                           ? university.website
                           : `https://${university.website}`
                       }
@@ -417,7 +349,7 @@ const UniversityFinder = () => {
         </button>
       )}
     </div>
-  )
-}
+  );
+};
 
-export default UniversityFinder
+export default UniversityFinder;

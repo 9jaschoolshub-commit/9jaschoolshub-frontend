@@ -90,7 +90,7 @@ export default function Dashboard() {
     setLoading(true)
     try {
       const results = await universityAPI.searchUniversities(searchQuery)
-      console.log('search results:', results)
+      // console.log('search results:', results)
 
       setSearchResults(results.data || [])
     } catch (error) {
@@ -341,7 +341,7 @@ export default function Dashboard() {
                       type="button"
                       onClick={handleSearch}
                       disabled={loading}
-                      className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600"
+                      className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 cursor-pointer"
                     >
                       {loading ? 'Searching...' : 'Search'}
                     </button>
