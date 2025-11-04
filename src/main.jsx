@@ -1,6 +1,6 @@
 import { createRoot } from 'react-dom/client'
-import ErrorBoundary from './components/global/ErrorBoundary'
-import FallbackUI from './components/fallback/FallbackUI'
+import ErrorBoundary from './components/ErrorBoundary'
+import FallbackUI from './components/FallbackUI'
 import './index.css'
 import App from './App'
 import { ClerkProvider } from '@clerk/clerk-react'

@@ -5,7 +5,7 @@ import FooterLink from './FooterLink'
 import ContactOption from './ContactOption'
 import Copyright from './Copyright'
 import Container from './Container'
-import sqwads from '../../assets/images/sqwads.png'
+import sqwads from '../assets/images/sqwads.png'
 
 const Footer = () => {
   return (

@@ -16,8 +16,8 @@ import {
 import topImage from '../assets/images/top-image.jpg'
 import bottomImage from '../assets/images/bottom-image.jpg'
 import academyJourney from '../assets/images/academy-journey.jpg'
-import UniversityCardSkeleton from '../components/fallback/UniversityCardSkeleton'
-import useAllUniversities from '../hooks/useAllUniversities'
+import UniversityCardSkeleton from '../components/UniversityCardSkeleton'
+import { useAllUniversities } from '../hooks/useQueries'
 
 const ICONS = [
   <Palette className="w-5 h-5 text-blue-600" />,

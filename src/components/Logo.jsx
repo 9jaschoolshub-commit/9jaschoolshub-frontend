@@ -1,4 +1,4 @@
-import logo from '../../assets/images/logo.svg'
+import logo from '../assets/images/logo.svg'
 
 const Logo = () => {
   return (
@@ -6,7 +6,7 @@ const Logo = () => {
       <img src={logo} alt="9jaschoolshub Logo" width={43} height={38} />
       <figcaption
         className="text-xl font-bold
-         'text-white"
+         text-white"
       >
         9jaschoolshub
       </figcaption>
