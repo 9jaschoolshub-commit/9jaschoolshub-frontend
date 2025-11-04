@@ -29,7 +29,7 @@ const UniversityCardSkeleton = () => {
         </div>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default UniversityCardSkeleton;
+export default UniversityCardSkeleton

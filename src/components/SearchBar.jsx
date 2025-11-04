@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import FormInput from '../form-fields/FormInput'
+import FormInput from './FormInput'
 import { Search } from 'lucide-react'
 
 const SearchBar = ({ onSubmit }) => {

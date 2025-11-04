@@ -1,4 +1,4 @@
-import { navLinks } from '../../assets/data'
+import { navLinks } from '../assets/data'
 import NavLinks from './NavLinks'
 
 const Navbar = () => {

@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom'
-import { socialLinks } from '../../assets/data'
-import SocialLink from '../global/SocialLink'
+import { socialLinks } from '../assets/data'
+import SocialLink from './SocialLink'
 
 const Copyright = () => {
   return (

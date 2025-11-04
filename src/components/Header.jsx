@@ -1,5 +1,5 @@
 import Logo from './Logo'
-import Container from '../global/Container'
+import Container from './Container'
 import Navbar from './Navbar'
 import { Menu } from 'lucide-react'
 
