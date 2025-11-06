@@ -1,5 +1,5 @@
-import heroImage1 from '../assets/images/top-image.jpg'
-import heroImage2 from '../assets/images/bottom-image.jpg'
+import heroImage1 from '../assets/images/top-image.webp'
+import heroImage2 from '../assets/images/bottom-image.webp'
 import Container from './Container'
 import SearchBar from './SearchBar'
 import { useNavigate } from 'react-router-dom'
@@ -25,7 +25,7 @@ const Hero = () => {
               <img
                 src={heroImage1}
                 alt="Students studying"
-                className="h-20 sm:h-30 xl:h-38 w-full overflow-hidden   bg-green-100 object-cover rounded-md"
+                className="h-20 sm:h-30 xl:h-38 w-full  object-cover rounded-md"
               />
             </figure>
 
@@ -35,12 +35,12 @@ const Hero = () => {
               <img
                 src={heroImage2}
                 alt="Students studying"
-                className="h-20 sm:h-30 xl:h-38 w-full object-cover rounded-md ml-auto"
+                className="h-20 sm:h-30 xl:h-38 w-full object-cover rounded-md"
               />
             </figure>
           </div>
         </div>
-        <div className="mt-1 space-y-4 sm:space-y-6 w-full">
+        <div className="mt-4 sm:mt-0 space-y-4 sm:space-y-6 w-full">
           <p className="text-gray-600 text-sm sm:text-base text-start max-w-[75%] sm:max-w-sm ">
             Find up-to-date information on courses, admission requirements and
             more with ease - all in one

@@ -13,8 +13,6 @@ import {
   Building2,
   Globe,
 } from 'lucide-react'
-import topImage from '../assets/images/top-image.jpg'
-import bottomImage from '../assets/images/bottom-image.jpg'
 import academyJourney from '../assets/images/academy-journey.jpg'
 import UniversityCardSkeleton from '../components/UniversityCardSkeleton'
 import { useAllUniversities } from '../hooks/useQueries'
@@ -99,7 +97,7 @@ const HomePage = () => {
       <Hero />
 
       {/* Academic Disciplines Section */}
-      <section className="py-16 bg-white">
+      {/* <section className="py-16 bg-white">
         <div className="max-w-7xl mx-auto px-4">
           <div className="text-center mb-12">
             <h2 className="text-4xl font-bold text-gray-900 mb-4">
@@ -154,10 +152,10 @@ const HomePage = () => {
             </button>
           </div>
         </div>
-      </section>
+      </section> */}
 
       {/* Featured Universities Section */}
-      {isLoading ? (
+      {/* {isLoading ? (
         <section className="py-16 bg-gray-50">
           <div className="max-w-7xl mx-auto px-4">
             <div className="grid md:grid-cols-3 gap-8 mb-12">
@@ -269,10 +267,10 @@ const HomePage = () => {
             </div>
           </div>
         </section>
-      )}
+      )} */}
 
       {/* Empowering Section */}
-      <section className="py-16 bg-white">
+      {/* <section className="py-16 bg-white">
         <div className="max-w-7xl mx-auto px-4">
           <div className="grid md:grid-cols-2 gap-12 items-center">
             <div>
@@ -298,7 +296,7 @@ const HomePage = () => {
             </div>
           </div>
         </div>
-      </section>
+      </section> */}
     </div>
   )
 }

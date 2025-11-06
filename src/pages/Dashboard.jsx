@@ -10,7 +10,7 @@ import {
 } from '@clerk/clerk-react'
 import filterData from '../data/filterData'
 import { toast } from 'react-toastify'
-import sideImage from '../assets/images/bottom-image.jpg'
+import sideImage from '../assets/images/bottom-image.webp'
 // import useStore from "../hooks/useStore";
 
 export default function Dashboard() {
