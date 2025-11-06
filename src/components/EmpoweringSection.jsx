@@ -1,6 +1,6 @@
 import { empowermentSectionInfo } from '../assets/data'
 import Container from './Container'
-import academyJourney from '../assets/images/academy-journey.jpg'
+import academyJourney from '../assets/images/academy-journey.webp'
 import SectionHeading from './SectionHeading'
 
 const EmpoweringSection = () => {
@@ -11,7 +11,7 @@ const EmpoweringSection = () => {
           <SectionHeading title={empowermentSectionInfo.title} />
         </div>
         <div className="grid md:grid-cols-2 gap-10 items-center">
-          <div className="text-gray-600 space-y-2 text-base lg:text-xl">
+          <div className="text-gray-600 space-y-2 text-base lg:text-2xl xl:text-3xl">
             <p>{empowermentSectionInfo.paragraph1}</p>
             <p>{empowermentSectionInfo.paragraph2}</p>
           </div>

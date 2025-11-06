@@ -13,7 +13,6 @@ import {
   Building2,
   Globe,
 } from 'lucide-react'
-import academyJourney from '../assets/images/academy-journey.jpg'
 import UniversityCardSkeleton from '../components/UniversityCardSkeleton'
 import { useAllUniversities } from '../hooks/useQueries'
 import Hero from '../components/Hero'
