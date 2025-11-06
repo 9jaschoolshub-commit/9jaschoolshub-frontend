@@ -1,3 +1,4 @@
+import { Link, useNavigate } from 'react-router-dom'
 import { academicDisciplineSectionInfo } from '../assets/data'
 import AcademicDisciplineCard from './AcademicDisciplineCard'
 import Container from './Container'
@@ -5,7 +6,7 @@ import SectionHeading from './SectionHeading'
 
 const AcademicDisciplineSection = () => {
   const { title, desc, academicDisciplines } = academicDisciplineSectionInfo
-
+  const navigate = useNavigate()
   return (
     <Container className="py-10 bg-white">
       <section className="space-y-10">
@@ -18,6 +19,11 @@ const AcademicDisciplineSection = () => {
             <AcademicDisciplineCard key={discipline.faculty} {...discipline} />
           ))}
         </div>
+        <Link to="/courses" className="text-center block">
+          <button className="bg-orange-400 text-white px-8 py-3 rounded-lg font-semibold hover:bg-orange-600 transition">
+            View All Disciplines
+          </button>
+        </Link>
       </section>
     </Container>
   )
