@@ -11,7 +11,7 @@ const FooterLink = ({ heading, links }) => {
       <ul className="space-y-1.5 text-gray-50 ">
         {links.map(({ url, label }) => {
           return (
-            <li>
+            <li key={label}>
               <Link to={url}> {label}</Link>{' '}
             </li>
           )

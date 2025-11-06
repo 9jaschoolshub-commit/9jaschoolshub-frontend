@@ -17,6 +17,7 @@ import UniversityCardSkeleton from '../components/UniversityCardSkeleton'
 import { useAllUniversities } from '../hooks/useQueries'
 import Hero from '../components/Hero'
 import EmpoweringSection from '../components/EmpoweringSection'
+import AcademicDisciplineSection from '../components/AcademicDisciplineSection'
 
 const ICONS = [
   <Palette className="w-5 h-5 text-blue-600" />,
@@ -97,6 +98,7 @@ const HomePage = () => {
       <Hero />
 
       {/* Academic Disciplines Section */}
+      <AcademicDisciplineSection />
       {/* <section className="py-16 bg-white">
         <div className="max-w-7xl mx-auto px-4">
           <div className="text-center mb-12">
