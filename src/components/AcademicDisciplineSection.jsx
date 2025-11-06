@@ -19,11 +19,13 @@ const AcademicDisciplineSection = () => {
             <AcademicDisciplineCard key={discipline.faculty} {...discipline} />
           ))}
         </div>
-        <Link to="/courses" className="text-center block">
-          <button className="bg-orange-400 text-white px-8 py-3 rounded-lg font-semibold hover:bg-orange-600 transition">
-            View All Disciplines
-          </button>
-        </Link>
+        <div className="text-center">
+          <Link to="/courses">
+            <button className="bg-orange-400 text-white px-8 py-3 rounded-lg font-semibold hover:bg-orange-600 transition">
+              View All Disciplines
+            </button>
+          </Link>
+        </div>
       </section>
     </Container>
   )
