@@ -9,7 +9,7 @@ const SearchBar = ({ onSubmit }) => {
   const handleInputChange = (field, value) => {
     setFormData((prev) => ({ ...prev, [field]: value }))
   }
-  const handleSubmit = () => {
+  const handleSubmit = (e) => {
     e.preventDefault()
     onSubmit(formData.searchQuery)
   }

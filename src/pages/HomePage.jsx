@@ -18,6 +18,7 @@ import bottomImage from '../assets/images/bottom-image.jpg'
 import academyJourney from '../assets/images/academy-journey.jpg'
 import UniversityCardSkeleton from '../components/UniversityCardSkeleton'
 import { useAllUniversities } from '../hooks/useQueries'
+import Hero from '../components/Hero'
 
 const ICONS = [
   <Palette className="w-5 h-5 text-blue-600" />,
@@ -32,7 +33,6 @@ const ICONS = [
 
 const HomePage = () => {
   const navigate = useNavigate()
-  const [searchInput, setSearchInput] = useState('')
 
   const { data: universitiesResponse, isLoading } = useAllUniversities()
 
@@ -85,12 +85,6 @@ const HomePage = () => {
     return Object.values(facultyMap)
   }, [universities])
 
-  const handleSearch = (e) => {
-    e.preventDefault()
-    if (!searchInput.trim()) return
-    navigate(`/universities?search=${encodeURIComponent(searchInput.trim())}`)
-  }
-
   const handleSearchByFaculty = (facultyName) => {
     navigate(`/courses?search=${encodeURIComponent(facultyName)}`)
   }
@@ -101,65 +95,8 @@ const HomePage = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      {/* Hero Section */}
-      <section className="relative bg-gray-100 py-16 h-screen-min">
-        <div className="mx-auto px-4 md:px-12">
-          <div className="grid md:grid-cols-2 gap-8 items-center">
-            <div>
-              <h1 className="text-5xl font-bold text-gray-900 leading-tight mb-6">
-                Explore Verified <br />
-                Nigerian <span className="text-orange-400">Universities</span>
-                <br />
-                with Ease
-              </h1>
-              <p className="text-gray-600 text-lg mb-8">
-                Find up-to-date information on courses, admission requirements
-                and more with ease — all in one place.
-              </p>
-              <form
-                className="relative flex items-center justify-center max-w-md"
-                onSubmit={handleSearch}
-              >
-                <input
-                  type="text"
-                  value={searchInput}
-                  onChange={(e) => setSearchInput(e.target.value)}
-                  className="px-5 py-3 w-full rounded-lg border border-gray-400 focus:outline-none focus:ring-2 focus:ring-orange-400"
-                  placeholder="Search University by name..."
-                />
-                <button
-                  className="absolute right-0 mr-5"
-                  type="submit"
-                  aria-label="Search for a university"
-                >
-                  <Search className="text-slate-700 cursor-pointer" />
-                </button>
-              </form>
-            </div>
-            <div className="relative">
-              <div className="flex">
-                <img
-                  src={topImage}
-                  alt="Two university students smiling and studying together"
-                  className="w-1/2 rounded-2xl p-2"
-                  loading="lazy"
-                />
-                <div className="w-1/2"></div>
-              </div>
-              <div className="flex rounded-2xl">
-                <div className="w-1/2"></div>
-                <img
-                  src={bottomImage}
-                  alt="A student in graduation attire holding a certificate"
-                  className="w-1/2 rounded-2xl p-2"
-                  loading="lazy"
-                />
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
+    <div className="min-h-screen">
+      <Hero />
 
       {/* Academic Disciplines Section */}
       <section className="py-16 bg-white">
