@@ -11,20 +11,20 @@ const UniversityCardSkeleton = () => {
           <div className="h-4 bg-gray-300 rounded w-1/2 mb-4" />
         </div>
         <div className="grid grid-cols-2 gap-4">
-          <div className="flex flex-col items-center gap-2">
+          <div className="flex flex-col items-start gap-2">
             <div className="h-4 bg-gray-300 rounded w-1/2 " />
             <div className="h-5 bg-gray-300 rounded w-3/4" />
           </div>
-          <div className="flex flex-col items-center gap-2">
+          <div className="flex flex-col items-start gap-2">
             <div className="h-4 bg-gray-300 rounded w-1/2 " />
             <div className="h-5 bg-gray-300 rounded w-3/4" />
           </div>
         </div>
-        <div className="grid grid-cols-4 gap-2">
-          <div className="h-5 bg-gray-300 rounded" />
-          <div className="h-5 bg-gray-300 rounded" />
-          <div className="h-5 bg-gray-300 rounded" />
-          <div className="h-5 bg-gray-300 rounded" />
+        <div className="flex flex-wrap gap-2">
+          <div className="h-5 bg-gray-300 w-16 rounded" />
+          <div className="h-5 bg-gray-300 w-16 rounded" />
+          <div className="h-5 bg-gray-300 w-16 rounded" />
+          <div className="h-5 bg-gray-300 w-16 rounded" />
         </div>
         <div className="flex justify-between gap-2">
           <div className="h-10 bg-gray-300 rounded-lg w-28"></div>

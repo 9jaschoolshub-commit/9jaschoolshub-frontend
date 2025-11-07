@@ -15,7 +15,7 @@ const AcademicDisciplineCard = ({
     navigate(`/courses?search=${encodeURIComponent(facultyName)}`)
   }
   return (
-    <div className="rounded-lg hover:shadow-md transition shadow-sm flex flex-col">
+    <div className="rounded-lg hover:shadow-md transition shadow-sm flex flex-col text-gray-900">
       <div
         className={`flex justify-center items-center w-full h-36 ${bg} rounded-t-lg`}
       >

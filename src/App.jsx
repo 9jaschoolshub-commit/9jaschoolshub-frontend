@@ -39,7 +39,7 @@ const router = createBrowserRouter([
             element: <UniversityFinder />,
           },
           {
-            path: ':universityName/:id',
+            path: ':id',
             element: <UniversityDetails />,
           },
         ],
