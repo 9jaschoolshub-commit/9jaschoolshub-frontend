@@ -180,14 +180,14 @@ export const academicDisciplineSectionInfo = {
         'physical and health education',
       ],
     },
-    {
+    /*  {
       faculty: 'environmental design & management',
       icon: Recycle,
       iconBg: 'bg-orange-100',
       color: 'orange-600',
       bg: 'bg-orange-50',
       courses: ['architecture', 'Surveying & Geoinformatics', 'Building'],
-    },
+    }, */
   ],
 }
 

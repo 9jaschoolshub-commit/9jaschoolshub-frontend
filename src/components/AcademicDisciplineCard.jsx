@@ -15,9 +15,9 @@ const AcademicDisciplineCard = ({
     navigate(`/courses?search=${encodeURIComponent(facultyName)}`)
   }
   return (
-    <div className="rounded-lg hover:shadow-md transition shadow-sm flex flex-col last:md:col-span-3 last:xl:col-span-1 last:md:justify-self-center last:md:max-w-1/3 last:xl:max-w-full">
+    <div className="rounded-lg hover:shadow-md transition shadow-sm flex flex-col">
       <div
-        className={`flex justify-center items-center w-full min-h-36 ${bg} rounded-t-lg`}
+        className={`flex justify-center items-center w-full h-36 ${bg} rounded-t-lg`}
       >
         <div className={`${iconBg} p-4 rounded-full`}>
           <IconComponent className={`w-5 h-5 text-${color}`} />
@@ -25,7 +25,7 @@ const AcademicDisciplineCard = ({
       </div>
       <div className="px-2 py-4 flex flex-col justify-between flex-1">
         <div className="space-y-1">
-          <h3 className="text-base font-medium capitalize">{faculty}</h3>
+          <h3 className="text-lg font-medium capitalize">{faculty}</h3>
           <p className=" text-base capitalize">
             {courses.join(', ')}, <span className="lowercase"> and more</span>
           </p>

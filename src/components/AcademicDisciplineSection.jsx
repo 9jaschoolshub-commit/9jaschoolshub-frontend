@@ -14,7 +14,7 @@ const AcademicDisciplineSection = () => {
           <SectionHeading title={title} />
           <p className="text-gray-600 text-base md:text-lg">{desc}</p>
         </div>
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-5 justify-self-center gap-4 xl:gap-6 ">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 justify-self-center gap-4 xl:gap-6 ">
           {academicDisciplines.map((discipline) => (
             <AcademicDisciplineCard key={discipline.faculty} {...discipline} />
           ))}
