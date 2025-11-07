@@ -4,21 +4,17 @@ import {
   Building2,
   Clock,
   Globe,
-  Instagram,
   Landmark,
-  Linkedin,
   Mail,
   MapPinIcon,
   Palette,
   Phone,
-  Recycle,
   Scale,
-  School,
   Sprout,
   TestTube,
-  Twitter,
-  X,
 } from 'lucide-react'
+import { FaXTwitter, FaInstagram } from 'react-icons/fa6'
+import { FiLinkedin } from 'react-icons/fi'
 
 export const navLinks = [
   { name: 'Home', path: '/' },
@@ -29,15 +25,15 @@ export const navLinks = [
 export const socialLinks = [
   {
     url: 'https://www.x.com/9jaschoolshub',
-    icon: Twitter,
+    icon: FaXTwitter,
   },
   {
     url: 'https://www.linkedin.com/company/sqwads',
-    icon: Linkedin,
+    icon: FiLinkedin,
   },
   {
     url: 'https://www.instagram.com/9jaschoolshub',
-    icon: Instagram,
+    icon: FaInstagram,
   },
 ]
 
@@ -180,14 +176,6 @@ export const academicDisciplineSectionInfo = {
         'physical and health education',
       ],
     },
-    /*  {
-      faculty: 'environmental design & management',
-      icon: Recycle,
-      iconBg: 'bg-orange-100',
-      color: 'orange-600',
-      bg: 'bg-orange-50',
-      courses: ['architecture', 'Surveying & Geoinformatics', 'Building'],
-    }, */
   ],
 }
 
