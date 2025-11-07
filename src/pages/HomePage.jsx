@@ -18,6 +18,7 @@ import { useAllUniversities } from '../hooks/useQueries'
 import Hero from '../components/Hero'
 import EmpoweringSection from '../components/EmpoweringSection'
 import AcademicDisciplineSection from '../components/AcademicDisciplineSection'
+import FeaturedUniversitiesSection from '../components/FeaturedUniversitiesSection'
 
 const ICONS = [
   <Palette className="w-5 h-5 text-blue-600" />,
@@ -96,67 +97,10 @@ const HomePage = () => {
   return (
     <div className="min-h-screen">
       <Hero />
-
-      {/* Academic Disciplines Section */}
       <AcademicDisciplineSection />
-      {/* <section className="py-16 bg-white">
-        <div className="max-w-7xl mx-auto px-4">
-          <div className="text-center mb-12">
-            <h2 className="text-4xl font-bold text-gray-900 mb-4">
-              Search Universities by Your Preferred Course
-            </h2>
-            <p className="text-gray-600 text-lg">
-              Discover Universities in Nigeria by your chosen course, location
-              and type (Federal, State & Private)
-            </p>
-          </div>
-
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
-            {disciplines.map((discipline, index) => (
-              <div
-                key={index}
-                className="rounded-2xl hover:shadow-lg transition cursor-pointer shadow-md"
-              >
-                <div
-                  className={`flex justify-center items-center w-full max-w-[315px] h-[173px] mx-auto ${discipline.color}`}
-                >
-                  <div className={`bg-amber-300/60 p-4 rounded-full`}>
-                    {discipline.icons[index % discipline.icons.length]}
-                  </div>
-                </div>
-                <div className="p-5">
-                  <h3 className="text-xl font-bold text-gray-900 mb-2">
-                    {discipline.title}
-                  </h3>
-                  <p className="text-gray-600 text-sm mb-4">
-                    {truncateCourses(discipline.courses, 3)}
-                  </p>
-                  <div
-                    className="flex items-center text-gray-500 cursor-pointer"
-                    onClick={() => handleSearchByFaculty(discipline.title)}
-                  >
-                    <Search className="w-4 mr-2" />
-                    <span className="font-semibold text-sm hover:text-orange-400">
-                      Search Courses
-                    </span>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-
-          <div className="text-center">
-            <button
-              className="bg-orange-400 text-white px-8 py-3 rounded-lg font-semibold hover:bg-orange-600 transition"
-              onClick={() => navigate('/courses')}
-            >
-              View All Disciplines
-            </button>
-          </div>
-        </div>
-      </section> */}
 
       {/* Featured Universities Section */}
+      <FeaturedUniversitiesSection />
       {/* {isLoading ? (
         <section className="py-16 bg-gray-50">
           <div className="max-w-7xl mx-auto px-4">
@@ -271,35 +215,7 @@ const HomePage = () => {
         </section>
       )} */}
 
-      {/* Empowering Section */}
       <EmpoweringSection />
-      {/* <section className="py-16 bg-white">
-        <div className="max-w-7xl mx-auto px-4">
-          <div className="grid md:grid-cols-2 gap-12 items-center">
-            <div>
-              <h2 className="text-4xl font-bold text-gray-900 mb-6">
-                Empowering Your Academic Journey
-              </h2>
-              <p className="text-gray-600 mb-6">
-                Our platform brings together reliable and updated information on
-                universities, programs, and entry requirements to help students,
-                parents and educators make informed decisions.
-              </p>
-              <p className="text-gray-600">
-                Whether you are exploring your options or narrowing down your
-                choices, everything you need is in one place.
-              </p>
-            </div>
-            <div className="relative">
-              <img
-                src={academyJourney}
-                alt="Students collaborating"
-                className="w-full h-80 object-cover rounded-2xl"
-              />
-            </div>
-          </div>
-        </div>
-      </section> */}
     </div>
   )
 }
