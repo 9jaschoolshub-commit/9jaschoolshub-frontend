@@ -2,6 +2,10 @@
 // import axios from "axios";
 
 export const getApiKeyFromServer = async () => {
+  /*Todo
+  -Before api call is initiated, check for apikey in zustand. If it's there, return the apikey
+  - If otherwise, make the api call and then set the apikey to zustand
+  */
   try {
     // const res = await axios.get(`${import.meta.env.VITE_APP_API_URL}/getApiKey`);
     // const apiKey = res.data.apiKey;

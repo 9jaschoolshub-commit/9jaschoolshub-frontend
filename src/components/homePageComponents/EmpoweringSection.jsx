@@ -1,7 +1,7 @@
-import { empowermentSectionInfo } from '../assets/data'
-import Container from './Container'
-import academyJourney from '../assets/images/academy-journey.webp'
-import SectionHeading from './SectionHeading'
+import { empowermentSectionInfo } from '../../data/homepageData'
+import Container from '../Container'
+import academyJourney from '../../assets/images/academy-journey.webp'
+import SectionHeading from '../SectionHeading'
 
 const EmpoweringSection = () => {
   return (

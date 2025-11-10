@@ -1,8 +1,8 @@
 import { Link } from 'react-router-dom'
-import { useAllUniversities } from '../hooks/useQueries'
-import Container from './Container'
-import UniversityCardSkeleton from './UniversityCardSkeleton'
-import UniversityCard from './UniversityCard'
+import { useAllUniversities } from '../../hooks/useQueries'
+import Container from '../Container'
+import UniversityCardSkeleton from '../UniversityCardSkeleton'
+import UniversityCard from '../UniversityCard'
 
 const FeaturedUniversitiesSection = () => {
   const { data: universitiesResponse, isLoading } = useAllUniversities()
@@ -14,7 +14,7 @@ const FeaturedUniversitiesSection = () => {
           {isLoading
             ? [...Array(3)].map((_, i) => <UniversityCardSkeleton key={i} />)
             : universitiesResponse?.data?.doc
-                ?.slice(0, 3)
+                ?.slice(0, 6)
                 .map((university) => (
                   <UniversityCard key={university._id} {...university} />
                 ))}

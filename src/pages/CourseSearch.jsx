@@ -1,112 +1,111 @@
-import { useState, useEffect } from 'react'
-import { NavLink, useNavigate, useSearchParams } from 'react-router-dom'
-import {
-  Search,
-  ChevronDown,
-  MapPin,
-  Phone,
-  Mail,
-  ExternalLink,
-} from 'lucide-react'
-import { searchProgrammes, universityAPI } from '../services/universityApi'
-import filterData from '../data/filterData'
+import { useState, useEffect, useCallback } from "react";
+import { useNavigate, useSearchParams } from "react-router-dom";
+import { Search, ChevronRight, ChevronDown } from "lucide-react";
+import UniversityCardSkeleton from "../components/UniversityCardSkeleton";
+import { universityAPI, searchProgrammes } from "../services/universityApi";
+// import { useAllUniversities, useSearchProgrammes } from "../hooks/useQueries";
+
+/**
+ * Refactor component to use useAllUniversities & useSearchProgrammes for query operations and api calls
+ */
+
+import filterData from "../data/filterData";
+import { MapPin, Mail, ExternalLink, Phone } from "lucide-react";
 
 const CourseSearch = () => {
-  const [searchQuery, setSearchQuery] = useState('')
-  const [selectedType, setSelectedType] = useState('')
-  const [selectedLocation, setSelectedLocation] = useState('')
-  const [universities, setUniversities] = useState([])
-  const [loading, setLoading] = useState(false)
-  const [error, setError] = useState('')
-  const [universityTypes, setUniversityTypes] = useState([])
-  const [locations, setLocations] = useState([])
+  const [searchQuery, setSearchQuery] = useState("");
+  const [selectedType, setSelectedType] = useState("");
+  const [selectedLocation, setSelectedLocation] = useState("");
+  const [universities, setUniversities] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+  const [universityTypes, setUniversityTypes] = useState([]);
+  const [locations, setLocations] = useState([]);
 
-  const [searchParams] = useSearchParams()
-  const navigate = useNavigate()
+  const [searchParams] = useSearchParams();
+  const navigate = useNavigate();
 
   // Extract query from URL on mount
   useEffect(() => {
-    const query = searchParams.get('search')
+    const query = searchParams.get("search");
     if (query) {
-      setSearchQuery(query)
+      setSearchQuery(query);
     }
 
-    setUniversityTypes(filterData.universityType)
-    setLocations(filterData.universityLocation)
-  }, [searchParams])
+    setUniversityTypes(filterData.universityType);
+    setLocations(filterData.universityLocation);
+  }, [searchParams]);
 
   // Sync URL with filters
   useEffect(() => {
-    const params = new URLSearchParams()
-    if (searchQuery) params.set('search', searchQuery)
-    if (selectedType) params.set('type', selectedType)
-    if (selectedLocation) params.set('location', selectedLocation)
+    const params = new URLSearchParams();
+    if (searchQuery) params.set("search", searchQuery);
+    if (selectedType) params.set("type", selectedType);
+    if (selectedLocation) params.set("location", selectedLocation);
 
-    navigate(`?${params.toString()}`, { replace: true })
-  }, [searchQuery, selectedType, selectedLocation, navigate])
+    navigate(`?${params.toString()}`, { replace: true });
+  }, [searchQuery, selectedType, selectedLocation, navigate]);
+
+  // Memoize fetchUniversities to prevent unnecessary re-creations and ensure stable reference
+  const fetchUniversities = useCallback(async () => {
+    try {
+      setLoading(true);
+      setError("");
+      let data;
+
+      // If there's a search query, use API. Otherwise, get all unis.
+      if (searchQuery) {
+        const res = await searchProgrammes(searchQuery);
+        data = res.data.doc || [];
+      } else {
+        const res = await universityAPI.getAllUniversities();
+        data = res.data || [];
+      }
+
+      let filtered = data;
+
+      if (selectedType) {
+        filtered = filtered.filter((u) => u.type === selectedType);
+      }
+      if (selectedLocation) {
+        filtered = filtered.filter((u) => u.location === selectedLocation);
+      }
+
+      setUniversities(filtered);
+    } catch (err) {
+      console.error(err);
+      setError(err.message || "Failed to fetch universities.");
+    } finally {
+      setLoading(false);
+    }
+  }, [searchQuery, selectedLocation, selectedType]);
 
   // Fetch universities when any filter changes (with debounce)
   useEffect(() => {
     const delayDebounce = setTimeout(() => {
-      fetchUniversities()
-    }, 100)
+      fetchUniversities();
+    }, 100);
 
-    return () => clearTimeout(delayDebounce)
-  }, [searchQuery, selectedType, selectedLocation])
-
-  const fetchUniversities = async () => {
-    try {
-      setLoading(true)
-      setError('')
-      let data
-
-      // If there's a search query, use API. Otherwise, get all unis.
-      if (searchQuery) {
-        const res = await searchProgrammes(searchQuery)
-        data = res.data || []
-      } else {
-        // Optional: create an API method to get all universities
-        // For now, assume SearchProgrammes with empty query returns all?
-        // Or you can add a new API call like `getAllUniversities()`
-        const res = await universityAPI.getAllUniversities() // Modify backend to return all if empty
-        data = res.data || []
-      }
-
-      let filtered = data
-
-      if (selectedType) {
-        filtered = filtered.filter((u) => u.type === selectedType)
-      }
-      if (selectedLocation) {
-        filtered = filtered.filter((u) => u.location === selectedLocation)
-      }
-
-      setUniversities(filtered)
-    } catch (err) {
-      console.error(err)
-      setError(err.message || 'Failed to fetch universities.')
-    } finally {
-      setLoading(false)
-    }
-  }
+    return () => clearTimeout(delayDebounce);
+  }, [fetchUniversities]);
 
   const handleSearch = (e) => {
-    e.preventDefault()
-  }
+    e.preventDefault();
+  };
 
   const getResultText = () => {
     if (searchQuery) {
-      return `Universities offering ${searchQuery}`
+      return `Universities offering ${searchQuery}`;
     }
-    return 'All Universities'
-  }
+    return "All Universities";
+  };
 
   const getSubText = () => {
     if (searchQuery) {
-      return `Showing results for "${searchQuery}"`
+      return `Showing results for "${searchQuery}"`;
     }
-    return 'Browse all universities in the system'
-  }
+    return "Browse all universities in the system";
+  };
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -200,95 +199,92 @@ const CourseSearch = () => {
 
         {/* Loading */}
         {loading && (
-          <div className="text-center py-8">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
-            <p className="text-gray-600 mt-4">Searching universities...</p>
+          <div className="text-center py-4">
+            <p className="text-gray-600 mb-4">Searching universities...</p>
+            {[...Array(3)].map((_, i) => (
+              <UniversityCardSkeleton key={i} />
+            ))}
           </div>
         )}
 
         {/* Results */}
         {!loading && universities.length > 0 && (
           <div className="space-y-4">
-            {universities.map((uni) => (
-              <div
-                key={uni._id}
-                className="bg-white rounded-lg border border-gray-400 p-6 hover:shadow-lg transition-shadow cursor-pointer"
-                onClick={() => navigate(`/university/${uni._id}`)} // Redirect to UniversityDetails
-              >
-                <div className="flex justify-between items-start">
-                  <div className="flex-1">
-                    <h3 className="text-xl font-semibold text-gray-900 mb-2">
-                      {uni.university_name}
-                    </h3>
-                    {/* <div className="flex items-center text-gray-600 mb-3 flex-wrap">
-                      <div className="flex items-center mr-4 mb-1">
-                        <MapPin size={16} className="mr-2" />
-                        <span>{uni.location}</span>
+            {universities.map((uni) => {
+              const {
+                _id,
+                university_name,
+                location,
+                type,
+                email,
+                phone,
+                website,
+              } = uni;
+              return (
+                <div
+                  key={_id}
+                  className="bg-white rounded-lg border border-gray-300 p-4 md:p-6 hover:shadow-lg transition-shadow cursor-pointer"
+                  onClick={() => navigate(`/university/${_id}`)} // Redirect to UniversityDetails
+                >
+                  <div className="flex justify-between items-start">
+                    <div className="flex-1">
+                      <h3 className="text-lg md:text-xl font-semibold text-gray-900 mb-2">
+                        {university_name}
+                      </h3>
+                      <div className="flex items-center text-gray-600 mb-4 flex-wrap">
+                        <div className="flex items-center mr-4 mb-1">
+                          <MapPin size={16} className="mr-2" />
+                          <span>{location}</span>
+                        </div>
+                        <span
+                          className={`px-2 py-1 rounded text-xs md:text-sm mb-1 ${
+                            type === "Federal"
+                              ? "bg-green-100 text-green-800"
+                              : "bg-blue-100 text-blue-800"
+                          }`}
+                        >
+                          {type}
+                        </span>
                       </div>
-                      <span
-                        className={`px-2 py-1 rounded text-sm mb-1 ${
-                          uni.type === 'Federal'
-                            ? 'bg-green-100 text-green-800'
-                            : 'bg-blue-100 text-blue-800'
-                        }`}
-                      >
-                        {uni.type}
-                      </span>
-                    </div> */}
 
-                    {/* <div className="mb-3">
-                      <h4 className="font-medium text-gray-900 mb-1">requrements:</h4>
-                      <div className="flex flex-wrap gap-2">
-                        {uni.notable_programs.flatMap((program) =>
-                          program.Courses.map((courseObj) => (
-                            <span
-                              key={courseObj.course}
-                              className="px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-sm"
-                            >
-                              {courseObj.requirements}
-                            </span>
-                          ))
+                      {/* Contact Info */}
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-3 text-sm text-gray-700">
+                        {email &&
+                          email
+                            .split(",")
+                            .map((em, i) => (
+                              <ContactItem
+                                key={i}
+                                icon={Mail}
+                                href={`mailto:${em.trim()}`}
+                                text={em.trim()}
+                              />
+                            ))}
+                        {phone && (
+                          <ContactItem
+                            icon={Phone}
+                            href={`tel:${phone}`}
+                            text={phone}
+                          />
+                        )}
+                        {website && (
+                          <ContactItem
+                            icon={ExternalLink}
+                            href={`https://${website}`}
+                            text="Visit Website"
+                            isExternal
+                          />
                         )}
                       </div>
-                    </div> */}
-
-                    {/* Contact Info */}
-                    {/* <div className="flex flex-wrap gap-4 text-sm text-gray-600">
-                      {uni.email && (
-                        <div className="flex items-center">
-                          <Mail size={14} className="mr-1" />
-                          <a href={`mailto:${uni.email}`} className="hover:text-blue-600">
-                            {uni.email}
-                          </a>
-                        </div>
-                      )}
-                      {uni.phone && (
-                        <div className="flex items-center">
-                          <Phone size={14} className="mr-1" />
-                          <a href={`tel:${uni.phone}`} className="hover:text-blue-600">
-                            {uni.phone}
-                          </a>
-                        </div>
-                      )}
-                      {uni.website && (
-                        <div className="flex items-center">
-                          <ExternalLink size={14} className="mr-1" />
-                          <a
-                            href={`https://${uni.website}`}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="hover:text-blue-600"
-                          >
-                            Visit Website
-                          </a>
-                        </div>
-                      )}
-                    </div> */}
+                    </div>
+                    <ChevronRight
+                      className="text-gray-400 ml-2 md:ml-4 flex-shrink-0"
+                      size={20}
+                    />
                   </div>
-                  <ChevronDown className="text-gray-400 ml-4" size={20} />
                 </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         )}
 
@@ -308,7 +304,25 @@ const CourseSearch = () => {
         )}
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default CourseSearch
+const ContactItem = ({ icon: Icon, href, text, isExternal = false }) => (
+  <a
+    href={href}
+    target={isExternal ? "_blank" : undefined}
+    rel={isExternal ? "noopener noreferrer" : undefined}
+    className="flex items-center gap-2 group"
+    onClick={(e) => e.stopPropagation()} // Prevent card navigation when clicking a link
+  >
+    <Icon
+      size={14}
+      className="text-gray-500 group-hover:text-blue-600 transition-colors"
+    />
+    <span className="truncate group-hover:text-blue-600 group-hover:underline transition-colors">
+      {text}
+    </span>
+  </a>
+);
+
+export default CourseSearch;

@@ -5,6 +5,13 @@ import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import { universityAPI } from "../services/universityApi";
+// import { useAllUniversities } from "../hooks/useQueries";
+
+/**
+ * Todo
+ * Refactor component to use useAllUniversities for api operations
+ */
+
 import UniversityCardSkeleton from "../components/UniversityCardSkeleton";
 import SearchBar from "../components/SearchBar";
 import uniImage1 from "../assets/images/uni1.webp";

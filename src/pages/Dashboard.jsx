@@ -48,16 +48,21 @@ export default function Dashboard() {
     const setup = async () => {
       if (isSignedIn) {
         try {
-          // Get and save auth token from Clerk to Zustand
-          // const token = await getToken();
-          // save to Zustand logic here
+          /*
+          Todo
+          Get auth token from Clerk and save to Zustand
+          */
 
-          // Fetch and save API key
+          // Then call getApiKeyFromServer() to get apikey from the server
           await getApiKeyFromServer()
         } catch (error) {
           toast.error('Failed to initialize admin session.')
           console.error('error message:', error)
         }
+      }else{
+        /*Todo
+        Delete auth token and apikey from zustand
+        */
       }
     }
     setup()

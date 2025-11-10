@@ -12,7 +12,9 @@ const api = axios.create({
 
 api.interceptors.request.use(
   (config) => {
-    // Get API key from Zustand store (useStore)
+    /*Todo
+    -Get apikey from zustand so it can be attached to headers
+    */
     const apiKey = 'logic here'
 
     if (apiKey) {

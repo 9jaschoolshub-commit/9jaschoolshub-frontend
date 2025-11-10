@@ -3,6 +3,12 @@ import { Link } from "react-router-dom";
 import { useParams } from "react-router-dom";
 import { ChevronRight } from "lucide-react";
 import { universityAPI } from "../services/universityApi";
+// import { useSingleUniversity } from "../hooks/useQueries";
+
+/**
+ * Todo
+ * Refactor component to use useSingleUniversity for api operations
+ */
 
 const UniversityDetails = () => {
   const { id } = useParams();

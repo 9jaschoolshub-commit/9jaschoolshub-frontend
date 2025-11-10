@@ -8,6 +8,11 @@ const Navbar = () => {
         <NavLinks key={navLink.name} {...navLink} />
       ))}
     </nav>
+
+    /**
+     * Todo
+     * Implement nav section for mobile
+     */
   );
 };
 export default Navbar;

@@ -1,5 +1,5 @@
-import { Search } from 'lucide-react'
-import { useNavigate } from 'react-router-dom'
+import { Search } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 const AcademicDisciplineCard = ({
   faculty,
@@ -9,11 +9,14 @@ const AcademicDisciplineCard = ({
   bg,
   courses,
 }) => {
-  const navigate = useNavigate()
-  const IconComponent = icon
+  const navigate = useNavigate();
+  const IconComponent = icon;
+
   const handleSearchByFaculty = (facultyName) => {
-    navigate(`/courses?search=${encodeURIComponent(facultyName)}`)
-  }
+    const parsedFacultyName = facultyName.split("&");
+    navigate(`/courses?search=${encodeURIComponent(parsedFacultyName[0])}`);
+  };
+
   return (
     <div className="rounded-lg hover:shadow-md transition shadow-sm flex flex-col text-gray-900">
       <div
@@ -27,7 +30,7 @@ const AcademicDisciplineCard = ({
         <div className="space-y-1">
           <h3 className="text-lg font-medium capitalize">{faculty}</h3>
           <p className=" text-base capitalize">
-            {courses.join(', ')}, <span className="lowercase"> and more</span>
+            {courses.join(", ")}, <span className="lowercase"> and more</span>
           </p>
         </div>
 
@@ -40,6 +43,6 @@ const AcademicDisciplineCard = ({
         </div>
       </div>
     </div>
-  )
-}
-export default AcademicDisciplineCard
+  );
+};
+export default AcademicDisciplineCard;

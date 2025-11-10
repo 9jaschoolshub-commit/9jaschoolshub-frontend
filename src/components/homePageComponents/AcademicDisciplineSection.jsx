@@ -1,12 +1,12 @@
-import { Link, useNavigate } from 'react-router-dom'
-import { academicDisciplineSectionInfo } from '../assets/data'
+import { Link } from 'react-router-dom'
+import { academicDisciplineSectionInfo } from '../../data/homepageData'
 import AcademicDisciplineCard from './AcademicDisciplineCard'
-import Container from './Container'
-import SectionHeading from './SectionHeading'
+import Container from '../Container'
+import SectionHeading from '../SectionHeading'
 
 const AcademicDisciplineSection = () => {
   const { title, desc, academicDisciplines } = academicDisciplineSectionInfo
-  const navigate = useNavigate()
+  
   return (
     <Container className="py-10 bg-white">
       <section className="space-y-10">

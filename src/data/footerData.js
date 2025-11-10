@@ -1,26 +1,24 @@
 import {
   Clock,
-  Instagram,
-  Linkedin,
   Mail,
   MapPinIcon,
   Phone,
-  Twitter,
-  X,
 } from "lucide-react";
+import { FaXTwitter, FaInstagram } from 'react-icons/fa6'
+import { FiLinkedin } from 'react-icons/fi'
 
 export const socialLinks = [
   {
     url: "https://www.x.com/9jaschoolshub",
-    icon: Twitter,
+    icon: FaXTwitter,
   },
   {
     url: "https://www.linkedin.com/company/sqwads",
-    icon: Linkedin,
+    icon: FiLinkedin,
   },
   {
     url: "https://www.instagram.com/9jaschoolshub",
-    icon: Instagram,
+    icon: FaInstagram,
   },
 ];
 

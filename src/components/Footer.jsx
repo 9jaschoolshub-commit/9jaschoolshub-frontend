@@ -4,7 +4,7 @@ import SocialLink from "./footerComponents/SocialLink";
 import FooterLink from "./footerComponents/FooterLink";
 import ContactOption from "./footerComponents/ContactOption";
 import Copyright from "./footerComponents/Copyright";
-import Container from "./footerComponents/Container";
+import Container from "./Container";
 import sqwads from "../assets/images/sqwads.png";
 
 const Footer = () => {
