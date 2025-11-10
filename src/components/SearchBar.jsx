@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import FormInput from "./FormInput";
 import { Search } from "lucide-react";
 
@@ -8,19 +8,12 @@ const SearchBar = ({ onSubmit, initialQuery = "" }) => {
   });
 
   const handleInputChange = (field, value) => {
-    setFormData((prev) => ({ ...prev, [field]: value }));
-  };
-
+    setFormData((prev) => ({ ...prev, [field]: value }))
+  }
   const handleSubmit = (e) => {
-    e.preventDefault();
-    if (!formData.searchQuery.trim()) return;
-    onSubmit(formData.searchQuery);
-  };
-
-  useEffect(() => {
-    setFormData((prev) => ({ ...prev, searchQuery: initialQuery }));
-  }, [initialQuery]);
-  
+    e.preventDefault()
+    onSubmit(formData.searchQuery)
+  }
   return (
     <form onSubmit={handleSubmit} className="relative w-full sm:max-w-md">
       <FormInput
