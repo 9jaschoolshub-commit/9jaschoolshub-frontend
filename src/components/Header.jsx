@@ -1,4 +1,4 @@
-import Logo from "./headerComponents/Logo";
+import Logo from "./Logo";
 import Container from "./Container";
 import Navbar from "./headerComponents/Navbar";
 import { Menu } from "lucide-react";

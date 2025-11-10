@@ -1,4 +1,4 @@
-import Hero from '../components/Hero'
+import Hero from '../components/homePageComponents/Hero'
 import EmpoweringSection from '../components/homePageComponents/EmpoweringSection'
 import AcademicDisciplineSection from '../components/homePageComponents/AcademicDisciplineSection'
 import FeaturedUniversitiesSection from '../components/homePageComponents/FeaturedUniversitiesSection'

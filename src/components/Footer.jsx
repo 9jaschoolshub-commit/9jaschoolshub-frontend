@@ -1,4 +1,4 @@
-import Logo from "./headerComponents/Logo";
+import Logo from "./Logo";
 import { contactOptions, footerLinks, socialLinks } from "../data/footerData";
 import SocialLink from "./footerComponents/SocialLink";
 import FooterLink from "./footerComponents/FooterLink";
