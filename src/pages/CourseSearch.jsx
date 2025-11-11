@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
-import { Search, ChevronRight, ChevronDown } from "lucide-react";
+import { Search, ChevronRight, ChevronDown, Component } from "lucide-react";
 import UniversityCardSkeleton from "../components/UniversityCardSkeleton";
 import { universityAPI, searchProgrammes } from "../services/universityApi";
 // import { useAllUniversities, useSearchProgrammes } from "../hooks/useQueries";
@@ -238,9 +238,9 @@ const CourseSearch = () => {
                         </div>
                         <span
                           className={`px-2 py-1 rounded text-xs md:text-sm mb-1 ${
-                            type === "Federal"
-                              ? "bg-green-100 text-green-800"
-                              : "bg-blue-100 text-blue-800"
+                            type === "Federal" ? "bg-green-100 text-green-800" :
+                            type === "Private" ? "bg-blue-100 text-blue-800" :
+                            "bg-pink-100 text-pink-800"
                           }`}
                         >
                           {type}
@@ -307,7 +307,7 @@ const CourseSearch = () => {
   );
 };
 
-const ContactItem = ({ icon: Icon, href, text, isExternal = false }) => (
+const ContactItem = ({ icon: IconComponent, href, text, isExternal = false }) => (
   <a
     href={href}
     target={isExternal ? "_blank" : undefined}
@@ -315,7 +315,7 @@ const ContactItem = ({ icon: Icon, href, text, isExternal = false }) => (
     className="flex items-center gap-2 group"
     onClick={(e) => e.stopPropagation()} // Prevent card navigation when clicking a link
   >
-    <Icon
+    <IconComponent
       size={14}
       className="text-gray-500 group-hover:text-blue-600 transition-colors"
     />

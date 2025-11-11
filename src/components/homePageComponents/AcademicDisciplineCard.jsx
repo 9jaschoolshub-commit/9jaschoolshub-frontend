@@ -13,8 +13,9 @@ const AcademicDisciplineCard = ({
   const IconComponent = icon;
 
   const handleSearchByFaculty = (facultyName) => {
-    const parsedFacultyName = facultyName.split("&");
-    navigate(`/courses?search=${encodeURIComponent(parsedFacultyName[0])}`);
+    let parsedFacultyName = facultyName.split("&");
+    parsedFacultyName = parsedFacultyName[0].trim();
+    navigate(`/courses?search=${encodeURIComponent(parsedFacultyName)}`);
   };
 
   return (
