@@ -1,28 +1,28 @@
-import { useState } from "react";
-import FormInput from "./FormInput";
-import { Search } from "lucide-react";
+import { useState } from 'react'
+import FormInput from './FormInput'
+import { Search } from 'lucide-react'
 
-const SearchBar = ({ onSubmit, initialQuery = "", className }) => {
+const SearchBar = ({ onSubmit, initialQuery = '', className, placeholder }) => {
   const [formData, setFormData] = useState({
     searchQuery: initialQuery,
-  });
+  })
 
   const handleInputChange = (field, value) => {
-    setFormData((prev) => ({ ...prev, [field]: value }));
-  };
+    setFormData((prev) => ({ ...prev, [field]: value }))
+  }
   const handleSubmit = (e) => {
-    e.preventDefault();
-    onSubmit(formData.searchQuery);
-  };
+    e.preventDefault()
+    onSubmit(formData.searchQuery)
+  }
   return (
     <form onSubmit={handleSubmit} className="relative w-full sm:max-w-md">
       <FormInput
         name="searchQuery"
         value={formData.searchQuery}
         handleInputChange={handleInputChange}
-        placeholder="Search University by name..."
-        type="search"
+        placeholder={placeholder}
         required
+        type="search"
         className={`pl-3 pr-10 py-2 sm:py-3 w-full rounded-lg border border-gray-400 focus:outline-none focus:border-orange-400 focus:ring-1 focus:ring-orange-400 ${className}`}
       />
       <button
@@ -32,6 +32,6 @@ const SearchBar = ({ onSubmit, initialQuery = "", className }) => {
         <Search className=" w-4 h-4 text-slate-700 cursor-pointer" />
       </button>
     </form>
-  );
-};
-export default SearchBar;
+  )
+}
+export default SearchBar

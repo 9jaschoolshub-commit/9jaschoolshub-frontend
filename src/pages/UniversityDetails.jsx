@@ -1,53 +1,34 @@
-import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
-import { useParams } from "react-router-dom";
-import { ChevronRight } from "lucide-react";
-import { universityAPI } from "../services/universityApi";
-// import { useSingleUniversity } from "../hooks/useQueries";
-
-/**
- * Todo
- * Refactor component to use useSingleUniversity for api operations
- */
+import { useState } from 'react'
+import { Link } from 'react-router-dom'
+import { useParams } from 'react-router-dom'
+import { ChevronRight } from 'lucide-react'
+import { useSingleUniversity } from '../hooks/useQueries'
 
 const UniversityDetails = () => {
-  const { id } = useParams();
-  const [university, setUniversity] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [visibleCount, setVisibleCount] = useState(4); // Number of programmes to show initially
+  const { id } = useParams()
+  const {
+    data: universityDetailsResponse,
+    isLoading,
+    isError,
+  } = useSingleUniversity(id)
+
+  const university = universityDetailsResponse?.data?.university
+  const [visibleCount, setVisibleCount] = useState(4) // Number of programmes to show initially
 
   // Function to handle "Show More" button click
   const handleShowMore = () => {
-    setVisibleCount((prevCount) => prevCount + 6); // Increase the count by 6
-  };
+    setVisibleCount((prevCount) => prevCount + 6) // Increase the count by 6
+  }
 
-  useEffect(() => {
-    if (!id) return;
-
-    const fetchUniversity = async () => {
-      try {
-        setLoading(true);
-        const res = await universityAPI.getUniversityById(id);
-        setUniversity(res.data.university);
-      } catch (err) {
-        console.error("Failed to load university data:", err.message);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchUniversity();
-  }, [id]);
-
-  if (loading) {
+  if (isLoading) {
     return (
       <div className="min-h-screen flex justify-center items-center bg-gray-100">
         <div className="animate-spin h-10 w-10 border-4 border-blue-500 border-t-transparent rounded-full"></div>
       </div>
-    );
+    )
   }
 
-  if (!university) {
+  if (isError) {
     return (
       <div className="min-h-screen flex justify-center items-center bg-gray-100">
         <div className="text-center">
@@ -57,32 +38,30 @@ const UniversityDetails = () => {
           <p className="text-gray-500">Try again or check the ID in the URL.</p>
         </div>
       </div>
-    );
+    )
   }
 
-  const courses = university.notable_programs.flatMap((faculty) =>
+  const courses = university?.notable_programs?.flatMap((faculty) =>
     faculty.Courses.map((course) => course.course)
-  );
-
-  // console.log(courses);
+  )
 
   return (
     <div className="min-h-screen p-6 mx-auto w-full">
       {/* Basic Info */}
       <div className="flex max-w-5xl items-center text-gray-600 text-sm mb-4 font-semibold">
-        <Link to="/universities" className="">
+        <Link to="/" className="">
           Home
         </Link>
         <span className="mx-2">
           <ChevronRight />
         </span>
-        <p>Courses</p>
+        <span className="text-[#F49E0B]">{university?.university_name}</span>
       </div>
 
       {university && (
         <>
           <div className="flex flex-col gap-8 w-full">
-            <div className="bg-gray-100 px-6 md:px-20 flex flex-col sm:flex-row justify-center items-center gap-10 py-6 mx-auto w-full md:w-1/2 rounded-md">
+            <div className="bg-gray-100 px-6 md:px-20 flex flex-col sm:flex-row justify-center items-center gap-10 py-6 mx-auto w-full rounded-md">
               <img src={university.image} alt={university.university_name} />
               <div className="flex flex-col items-start gap-1 text-sm sm:text-base">
                 <h1 className="text-lg sm:text-2xl font-semibold text-black">
@@ -93,7 +72,7 @@ const UniversityDetails = () => {
                 <p className="text-gray-600">{university.school_fees_range}</p>
                 <a
                   href={
-                    university.website.startsWith("https://")
+                    university.website.startsWith('https://')
                       ? university.website
                       : `https://${university.website}`
                   }
@@ -133,16 +112,10 @@ const UniversityDetails = () => {
               </div>
             </div>
           </div>
-          <div className="bg-white py-12 border-t-4 border-gray-300">
-            <p className="w-full text-center">
-              Click on a course for subject combination, entry requirements and
-              special waivers, basically more details about the course.
-            </p>
-          </div>
         </>
       )}
     </div>
-  );
-};
+  )
+}
 
-export default UniversityDetails;
+export default UniversityDetails
