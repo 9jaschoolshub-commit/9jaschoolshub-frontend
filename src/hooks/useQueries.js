@@ -1,6 +1,9 @@
 import { useQuery, useQueryClient, useMutation } from '@tanstack/react-query'
 import { universityAPI, searchProgrammes } from '../services/universityApi'
 
+
+const stale_time = 1000 * 60 * 5
+
 // Get all universities
 export const useAllUniversities = () => {
   const getAllUniversities = async () => {
@@ -10,6 +13,7 @@ export const useAllUniversities = () => {
   const queryData = useQuery({
     queryKey: ['universities'],
     queryFn: getAllUniversities,
+    staleTime: stale_time
   })
 
   return queryData
@@ -24,6 +28,7 @@ export const useSearchProgrammes = (searchQuery) => {
   const queryData = useQuery({
     queryKey: ['search-programmes'],
     queryFn: getSearchProgrammes,
+    staleTime: stale_time
   })
   return queryData
 }
@@ -39,6 +44,7 @@ export const useSearchUniversities = (searchQuery) => {
   const queryData = useQuery({
     queryKey: ['search-universities'],
     queryFn: getSearchUniversities,
+    staleTime: stale_time
   })
 
   return queryData

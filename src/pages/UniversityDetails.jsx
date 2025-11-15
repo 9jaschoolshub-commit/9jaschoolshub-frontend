@@ -62,7 +62,7 @@ const UniversityDetails = () => {
         <>
           <div className="flex flex-col gap-8 w-full">
             <div className="bg-gray-100 px-6 md:px-20 flex flex-col sm:flex-row justify-center items-center gap-10 py-6 mx-auto w-full rounded-md">
-              <img src={university.image} alt={university.university_name} />
+              <img src={university.image} alt={university.university_name} className='rounded-md h-50 w-100 object-cover' />
               <div className="flex flex-col items-start gap-1 text-sm sm:text-base">
                 <h1 className="text-lg sm:text-2xl font-semibold text-black">
                   {university.university_name}
@@ -87,7 +87,7 @@ const UniversityDetails = () => {
             {/* Courses Offered */}
             <div className="p-10 bg-gray-100 rounded-md">
               <div className="max-w-5xl mx-auto flex flex-col justify-center items-center gap-6">
-                <h2 className="text-xl md:text-2xl font-semibold text-black">
+                <h2 className="text-xl md:text-2xl font-semibold text-black text-center">
                   Courses Offered in {university.university_name}
                 </h2>
                 <div className="place-items-center grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 w-full">
