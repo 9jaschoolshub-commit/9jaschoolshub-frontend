@@ -22,7 +22,7 @@ const CourseSearch = () => {
   const { data: programmesResponse, isLoading } =
     useSearchProgrammes(searchTerm)
   const programmesResult = programmesResponse?.data?.doc
-
+    
   const handleSearch = (query) => {
     setSearchTerm(query)
     // Clear filters when a search is performed
