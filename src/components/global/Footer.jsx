@@ -1,11 +1,11 @@
 import Logo from "./Logo";
-import { contactOptions, footerLinks, socialLinks } from "../data/footerData";
-import SocialLink from "./footerComponents/SocialLink";
-import FooterLink from "./footerComponents/FooterLink";
-import ContactOption from "./footerComponents/ContactOption";
-import Copyright from "./footerComponents/Copyright";
+import { contactOptions, footerLinks, socialLinks } from "../../data/footerData";
+import SocialLink from "../features/footer/SocialLink";
+import FooterLink from "../features/footer/FooterLink";
+import ContactOption from "../features/footer/ContactOption";
+import Copyright from "../features/footer/Copyright";
 import Container from "./Container";
-import sqwads from "../assets/images/sqwads.png";
+import sqwads from "../../assets/images/sqwads.png";
 
 const Footer = () => {
   return (

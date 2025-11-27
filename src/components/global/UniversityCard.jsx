@@ -1,5 +1,5 @@
-import { Eye, MapPin } from 'lucide-react'
-import { Link } from 'react-router-dom'
+import { Eye, MapPin } from "lucide-react";
+import { Link } from "react-router-dom";
 
 const UniversityCard = ({
   _id,
@@ -11,6 +11,10 @@ const UniversityCard = ({
   school_fees_range,
   website,
 }) => {
+  const courses = notable_programs?.flatMap((faculty) =>
+    faculty.Courses.map((course) => course.course)
+  );
+
   return (
     <div className="bg-white rounded-lg shadow-sm hover:shadow-md transition flex flex-col">
       <figure className="h-48 ">
@@ -27,9 +31,11 @@ const UniversityCard = ({
             {type && (
               <span
                 className={`px-3 py-1.5 rounded-full text-sm font-semibold ${
-                  type === 'Private'
-                    ? 'bg-blue-100 text-blue-800'
-                    : 'bg-green-100 text-green-800'
+                  type === "Private"
+                    ? "bg-blue-100 text-blue-800"
+                    : type === "State"
+                    ? "bg-pink-100 text-pink-800"
+                    : "bg-green-100 text-green-800"
                 }`}
               >
                 {type}
@@ -44,46 +50,45 @@ const UniversityCard = ({
         <div className="flex justify-between gap-4 text-sm mb-4">
           <div>
             <span className="text-gray-500">Programs</span>
-            <div className="font-medium">{notable_programs.length}</div>
+            <div className="font-medium">{courses.length}</div>
           </div>
           <div>
             <span className="text-gray-500">Tuition Fee</span>
-            <div className="font-medium">{school_fees_range || 'N/A'}</div>
+            <div className="font-medium">{school_fees_range || "N/A"}</div>
           </div>
         </div>
         <div className="flex flex-wrap items-center gap-2">
-          {notable_programs.slice(0, 3).map((program) => {
-            const { Faculty, _id } = program
+          {courses.slice(0, 3).map((course, index) => {
             return (
               <span
-                key={_id}
+                key={index}
                 className="text-xs bg-gray-100 text-gray-600 px-2 py-1 rounded"
               >
-                {Faculty}
+                {course}
               </span>
-            )
+            );
           })}
-          {notable_programs.length > 3 && (
+          {courses.length > 3 && (
             <span className="text-xs text-gray-500">
-              +{notable_programs.length - 3} more
+              +{courses.length - 3} more
             </span>
           )}
         </div>
         <div className="flex items-center justify-between gap-4 ">
           <Link to={`/university/${_id}`}>
-            <button className="flex items-center gap-2 border border-orange-400 text-orange-400 py-2 px-4 rounded-lg text-sm font-medium hover:bg-gray-50 transition">
+            <button className="flex items-center gap-2 border border-orange-400 text-orange-400 py-2 px-4 rounded-lg text-sm font-medium hover:bg-gray-50 transition cursor-pointer">
               <Eye className="w-5 h-5 text-orange-400" />
               <span>View Details</span>
             </button>
           </Link>
           <a href={`https://www.${website}`} target="_blank">
-            <button className="flex bg-orange-400 text-white py-2 px-4 rounded-lg text-sm font-medium hover:bg-orange-600 transition">
+            <button className="flex bg-orange-400 text-white py-2 px-4 rounded-lg text-sm font-medium hover:bg-orange-600 transition cursor-pointer">
               Apply Now
             </button>
           </a>
         </div>
       </div>
     </div>
-  )
-}
-export default UniversityCard
+  );
+};
+export default UniversityCard;

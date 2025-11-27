@@ -1,7 +1,7 @@
-import Hero from '../components/homePageComponents/Hero'
-import EmpoweringSection from '../components/homePageComponents/EmpoweringSection'
-import AcademicDisciplineSection from '../components/homePageComponents/AcademicDisciplineSection'
-import FeaturedUniversitiesSection from '../components/homePageComponents/FeaturedUniversitiesSection'
+import Hero from "../components/features/homepage/Hero";
+import EmpoweringSection from "../components/features/homepage/EmpoweringSection";
+import AcademicDisciplineSection from "../components/features/homepage/AcademicDisciplineSection";
+import FeaturedUniversitiesSection from "../components/features/homePage/FeaturedUniversitiesSection";
 
 const HomePage = () => {
   return (

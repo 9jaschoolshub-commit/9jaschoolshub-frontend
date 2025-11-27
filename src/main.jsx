@@ -1,7 +1,7 @@
 import { createRoot } from "react-dom/client";
 import { StrictMode } from "react";
-import ErrorBoundary from "./components/ErrorBoundary";
-import FallbackUI from "./components/FallbackUI";
+import ErrorBoundary from "./components/global/ErrorBoundary";
+import FallbackUI from "./components/global/FallbackUI";
 import "./index.css";
 import App from "./App";
 import { ClerkProvider } from "@clerk/clerk-react";

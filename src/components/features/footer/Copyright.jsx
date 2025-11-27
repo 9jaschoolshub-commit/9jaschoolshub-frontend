@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom'
-import { socialLinks } from '../../data/footerData'
+import { socialLinks } from '../../../data/footerData'
 import SocialLink from './SocialLink'
 
 const Copyright = () => {

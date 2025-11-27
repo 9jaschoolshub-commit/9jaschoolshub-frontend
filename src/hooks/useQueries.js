@@ -26,9 +26,10 @@ export const useSearchProgrammes = (searchQuery) => {
     return searchProgrammesResult
   }
   const queryData = useQuery({
-    queryKey: ['search-programmes'],
+    queryKey: ['search-programmes', searchQuery],
     queryFn: getSearchProgrammes,
-    staleTime: stale_time
+    staleTime: stale_time,
+    retry: false
   })
   return queryData
 }
@@ -42,7 +43,7 @@ export const useSearchUniversities = (searchQuery) => {
     return searchUniversities
   }
   const queryData = useQuery({
-    queryKey: ['search-universities'],
+    queryKey: ['search-universities', searchQuery],
     queryFn: getSearchUniversities,
     staleTime: stale_time
   })
@@ -57,7 +58,7 @@ export const useSingleUniversity = (id) => {
     return singleUniversity
   }
   const queryData = useQuery({
-    queryKey: ['single-university'],
+    queryKey: ['single-university', id],
     queryFn: getSingleUniversity,
   })
 

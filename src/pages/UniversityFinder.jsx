@@ -1,93 +1,93 @@
-import { useState, useMemo } from 'react'
-import { useNavigate, useLocation } from 'react-router-dom'
-import { useAllUniversities } from '../hooks/useQueries'
-import UniversityCardSkeleton from '../components/UniversityCardSkeleton'
-import SearchBar from '../components/SearchBar'
-import Carousel from '../components/Carousel'
-import Container from '../components/Container'
-import UniversityCard from '../components/UniversityCard'
-import filterData from '../data/filterData'
-import SelectFilterOption from '../components/SelectFilterOption'
-import NoResultFound from '../components/NoResultFound'
-import carouselData from '../data/carouselData'
+import { useState, useMemo } from "react";
+import { useNavigate, useLocation } from "react-router-dom";
+import { useAllUniversities } from "../hooks/useQueries";
+import UniversityCardSkeleton from "../components/global/UniversityCardSkeleton";
+import SearchBar from "../components/global/SearchBar";
+import Carousel from "../components/global/Carousel";
+import Container from "../components/global/Container";
+import UniversityCard from "../components/global/UniversityCard";
+import filterData from "../data/filterData";
+import SelectFilterOption from "../components/global/SelectFilterOption";
+import NoResultFound from "../components/global/NoResultFound";
+import carouselData from "../data/carouselData";
 
 const UniversityFinder = () => {
-  const location = useLocation()
-  const navigate = useNavigate()
-  const [selectedType, setSelectedType] = useState('')
-  const [selectedLocation, setSelectedLocation] = useState('')
-  const [visibleCount, setVisibleCount] = useState(9)
+  const location = useLocation();
+  const navigate = useNavigate();
+  const [selectedType, setSelectedType] = useState("");
+  const [selectedLocation, setSelectedLocation] = useState("");
+  const [visibleCount, setVisibleCount] = useState(9);
 
   // Extract ?search=query from URL
-  const queryParams = new URLSearchParams(location.search)
-  const initialSearchTerm = queryParams.get('search') || ''
-  const [searchTerm, setSearchTerm] = useState(initialSearchTerm)
+  const queryParams = new URLSearchParams(location.search);
+  const initialSearchTerm = queryParams.get("search") || "";
+  const [searchTerm, setSearchTerm] = useState(initialSearchTerm);
 
-  const { data: universitiesResponse, isLoading } = useAllUniversities()
-  const allUniversities = universitiesResponse?.data?.doc
+  const { data: universitiesResponse, isLoading } = useAllUniversities();
+  const allUniversities = universitiesResponse?.data?.doc;
 
   // Memoize filtered universities for performance
   const filteredUniversities = useMemo(() => {
-    let filtered = allUniversities
+    let filtered = allUniversities || [];
 
     // Search filter
     if (searchTerm) {
-      filtered = filtered.filter(
+      filtered = filtered?.filter(
         (university) =>
           university.university_name
             .toLowerCase()
             .includes(searchTerm.toLowerCase()) ||
           university.location.toLowerCase().includes(searchTerm.toLowerCase())
-      )
+      );
     }
 
     // Type filter
     if (selectedType) {
       filtered = filtered.filter(
         (uni) => uni.type.toLowerCase() === selectedType.toLowerCase()
-      )
+      );
     }
 
     // Location filter
     if (selectedLocation) {
       filtered = filtered.filter((uni) =>
         uni.location.toLowerCase().includes(selectedLocation.toLowerCase())
-      )
+      );
     }
 
-    return filtered
-  }, [allUniversities, searchTerm, selectedType, selectedLocation])
+    return filtered;
+  }, [allUniversities, searchTerm, selectedType, selectedLocation]);
 
   const handleSearch = (query) => {
-    setSearchTerm(query)
+    setSearchTerm(query);
     // Clear filters when a search is performed
-    setSelectedType('')
-    setSelectedLocation('')
+    setSelectedType("");
+    setSelectedLocation("");
     // Update URL without reloading the page
-    navigate(`/courses?search=${encodeURIComponent(query)}`, {
+    navigate(`/universities?search=${encodeURIComponent(query)}`, {
       replace: true,
-    })
-  }
+    });
+  };
 
   const handleFilterChange = (setter, e) => {
-    const value = e.target.value
-    setter(value)
+    const value = e.target.value;
+    setter(value);
 
     // Clear search term when a filter is applied
     if (value) {
-      setSearchTerm('')
+      setSearchTerm("");
       // Remove search query from URL
-      navigate('/universities', { replace: true })
+      navigate("/universities", { replace: true });
     }
-  }
+  };
 
   // Handler to load more universities
   const handleViewMore = () => {
-    setVisibleCount((prevCount) => prevCount + 9)
-  }
+    setVisibleCount((prevCount) => prevCount + 9);
+  };
 
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen overflow-x-hidden">
       {/* Hero Section */}
       <Container className="bg-white py-6 md:py-8">
         <div className="text-center">
@@ -102,7 +102,16 @@ const UniversityFinder = () => {
       </Container>
 
       {/* Image Carousel */}
-      <Carousel carouselImages={carouselData.universities} />
+      <Carousel
+        carouselImages={carouselData.universities}
+        slidesToShow={1}
+        className="md:hidden"
+      />
+      <Carousel
+        carouselImages={carouselData.universities}
+        slidesToShow={3}
+        className="hidden md:block"
+      />
 
       <Container className="bg-gray-50 py-10">
         {/* Search and Filter Section */}
@@ -147,16 +156,18 @@ const UniversityFinder = () => {
           <NoResultFound text="No universities found matching your criteria." />
         )}
         {filteredUniversities?.length > visibleCount && (
-          <button
-            className="mt-10 flex mx-auto px-4 py-2 bg-orange-400 text-white rounded hover:bg-orange-600 transition cursor-pointer"
-            onClick={handleViewMore}
-          >
-            View More
-          </button>
+          <div className="flex justify-center mt-10">
+            <button
+              className="px-4 py-2 bg-orange-400 text-white rounded hover:bg-orange-600 transition cursor-pointer"
+              onClick={handleViewMore}
+            >
+              View More
+            </button>
+          </div>
         )}
       </Container>
     </div>
-  )
-}
+  );
+};
 
-export default UniversityFinder
+export default UniversityFinder;

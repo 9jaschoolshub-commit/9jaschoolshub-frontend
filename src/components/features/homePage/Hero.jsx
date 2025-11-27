@@ -1,16 +1,16 @@
-import { LazyLoadImage } from 'react-lazy-load-image-component'
-import 'react-lazy-load-image-component/src/effects/blur.css'
-import heroImage1 from '../../assets/images/top-image.webp'
-import heroImage2 from '../../assets/images/bottom-image.webp'
-import Container from '../Container'
-import SearchBar from '../SearchBar'
-import { useNavigate } from 'react-router-dom'
+import { LazyLoadImage } from "react-lazy-load-image-component";
+import "react-lazy-load-image-component/src/effects/blur.css";
+import heroImage1 from "../../../assets/images/top-image.webp";
+import heroImage2 from "../../../assets/images/bottom-image.webp";
+import Container from "../../global/Container";
+import SearchBar from "../../global/SearchBar";
+import { useNavigate } from "react-router-dom";
 
 const Hero = () => {
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   const handleSearch = (searchQuery) => {
-    navigate(`/universities?search=${encodeURIComponent(searchQuery.trim())}`)
-  }
+    navigate(`/universities?search=${encodeURIComponent(searchQuery.trim())}`);
+  };
   return (
     <div className="relative bg-gray-50 min-h-[50vh] md:min-h-0">
       {/* Mobile-specific background image and overlay */}
@@ -26,7 +26,7 @@ const Hero = () => {
           {/* Left Column: Text Content & Search */}
           <div className="space-y-6 text-center md:text-left relative z-10">
             <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold leading-tight text-white md:text-gray-900">
-              Explore Verified Nigerian{' '}
+              Explore Verified Nigerian{" "}
               <span className="text-orange-500">Universities</span> With Ease
             </h1>
             <p className="text-base sm:text-lg max-w-md mx-auto md:mx-0 text-white md:text-gray-600">
@@ -66,6 +66,6 @@ const Hero = () => {
         </section>
       </Container>
     </div>
-  )
-}
-export default Hero
+  );
+};
+export default Hero;

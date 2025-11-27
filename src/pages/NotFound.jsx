@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Home, ArrowLeft, Map } from "lucide-react";
 import { Link } from "react-router-dom";
-import SupportModal from "../components/SupportModal";
+import SupportModal from "../components/global/SupportModal";
 
 export default function NotFound() {
   const handleGoHome = () => {

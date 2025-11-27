@@ -1,11 +1,11 @@
-import { Link } from 'react-router-dom'
-import { useAllUniversities } from '../../hooks/useQueries'
-import Container from '../Container'
-import UniversityCardSkeleton from '../UniversityCardSkeleton'
-import UniversityCard from '../UniversityCard'
+import { Link } from "react-router-dom";
+import { useAllUniversities } from "../../../hooks/useQueries";
+import Container from "../../global/Container";
+import UniversityCardSkeleton from "../../global/UniversityCardSkeleton";
+import UniversityCard from "../../global/UniversityCard";
 
 const FeaturedUniversitiesSection = () => {
-  const { data: universitiesResponse, isLoading } = useAllUniversities()
+  const { data: universitiesResponse, isLoading } = useAllUniversities();
 
   return (
     <Container className="py-10 bg-gray-50">
@@ -20,14 +20,15 @@ const FeaturedUniversitiesSection = () => {
                 ))}
         </div>
         <div className="text-center">
-          <Link to="/universities">
-            <button className="bg-orange-400 text-white px-8 py-3 rounded-lg font-medium hover:bg-orange-600 transition">
-              View All Universities
-            </button>
+          <Link
+            to="/universities"
+            className="bg-orange-400 text-white px-8 py-3 rounded-lg font-medium hover:bg-orange-600 transition"
+          >
+            View All Universities
           </Link>
         </div>
       </div>
     </Container>
-  )
-}
-export default FeaturedUniversitiesSection
+  );
+};
+export default FeaturedUniversitiesSection;

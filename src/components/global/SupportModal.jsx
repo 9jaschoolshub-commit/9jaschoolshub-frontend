@@ -10,7 +10,7 @@ export default function SupportModal({ isOpen, onClose }) {
   const handleSubmit = (e) => {
     e.preventDefault();
     const body = `${message}`;
-    const mailtoLink = `mailto:obicyprian160@gmail.com?subject=${encodeURIComponent(
+    const mailtoLink = `mailto:9jaschoolshub@gmail.com?subject=${encodeURIComponent(
       subject
     )}&body=${encodeURIComponent(body.trim())}`;
 

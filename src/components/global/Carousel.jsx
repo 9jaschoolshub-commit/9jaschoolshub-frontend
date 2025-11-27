@@ -2,18 +2,17 @@ import Slider from 'react-slick'
 import 'slick-carousel/slick/slick.css'
 import 'slick-carousel/slick/slick-theme.css'
 
-const Carousel = ({ carouselImages }) => {
+const Carousel = ({ carouselImages, slidesToShow, className}) => {
   const sliderSettings = {
     dots: true,
     infinite: true,
-    speed: 1000,
-    fade: true,
-    slidesToShow: 1,
+    speed: 1500,
+    slidesToShow: slidesToShow,
     slidesToScroll: 1,
     autoplay: true,
     centerMode: false,
     centerPadding: '0px',
-    autoplaySpeed: 3000,
+    // autoplaySpeed: 3000,
     pauseOnHover: false,
     appendDots: (dots) => (
       <div className="absolute bottom-4 w-full ">
@@ -29,15 +28,15 @@ const Carousel = ({ carouselImages }) => {
     dotsClass: 'slick-dots custom-dots',
   }
   return (
-    <div className="h-90 relative w-full mb-8">
+    <div className={`h-90 relative w-full mb-8 ${className}`}>
       <Slider {...sliderSettings} className="h-full w-full">
         {carouselImages.map((image, index) => (
-          <figure className="overflow-hidden">
+          <figure className="overflow-hidden px-4">
             <img
               key={index}
               src={image}
               alt={`University ${index + 1}`}
-              className="h-90 w-full object-cover"
+              className="h-90 w-full object-cover rounded-md"
             />
           </figure>
         ))}

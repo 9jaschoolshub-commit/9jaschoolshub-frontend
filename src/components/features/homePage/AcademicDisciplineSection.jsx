@@ -1,12 +1,12 @@
-import { Link } from 'react-router-dom'
-import { academicDisciplineSectionInfo } from '../../data/homepageData'
-import AcademicDisciplineCard from './AcademicDisciplineCard'
-import Container from '../Container'
-import SectionHeading from '../SectionHeading'
+import { Link } from "react-router-dom";
+import { academicDisciplineSectionInfo } from "../../../data/homepageData";
+import AcademicDisciplineCard from "../homePage/AcademicDisciplineCard";
+import Container from "../../global/Container";
+import SectionHeading from "../../global/SectionHeading";
 
 const AcademicDisciplineSection = () => {
-  const { title, desc, academicDisciplines } = academicDisciplineSectionInfo
-  
+  const { title, desc, academicDisciplines } = academicDisciplineSectionInfo;
+
   return (
     <Container className="py-10 bg-white">
       <section className="space-y-10">
@@ -20,14 +20,15 @@ const AcademicDisciplineSection = () => {
           ))}
         </div>
         <div className="text-center">
-          <Link to="/courses">
-            <button className="bg-orange-400 text-white px-8 py-3 rounded-lg font-semibold hover:bg-orange-600 transition">
-              View All Disciplines
-            </button>
+          <Link
+            to="/courses"
+            className="bg-orange-400 text-white px-8 py-3 rounded-lg font-semibold hover:bg-orange-600 transition"
+          >
+            View All Disciplines
           </Link>
         </div>
       </section>
     </Container>
-  )
-}
-export default AcademicDisciplineSection
+  );
+};
+export default AcademicDisciplineSection;

@@ -1,72 +1,69 @@
-import { useState, useMemo } from 'react'
-import { useNavigate } from 'react-router-dom'
-import UniversityCardSkeleton from '../components/UniversityCardSkeleton'
-import filterData from '../data/filterData'
-import Container from '../components/Container'
-import SearchBar from '../components/SearchBar'
-import SelectFilterOption from '../components/SelectFilterOption'
-import { useSearchProgrammes } from '../hooks/useQueries'
-import UniversityCard from '../components/UniversityCard'
-import NoResultFound from '../components/NoResultFound'
+import { useState, useMemo, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import UniversityCardSkeleton from "../components/global/UniversityCardSkeleton";
+import filterData from "../data/filterData";
+import Container from "../components/global/Container";
+import SearchBar from "../components/global/SearchBar";
+import SelectFilterOption from "../components/global/SelectFilterOption";
+import { useSearchProgrammes } from "../hooks/useQueries";
+import UniversityCard from "../components/global/UniversityCard";
+import NoResultFound from "../components/global/NoResultFound";
 
 const CourseSearch = () => {
-  const queryParams = new URLSearchParams(location.search)
-  /* An empty search query returns undefined */
-  const initialSearchTerm = queryParams.get('search') || 'all'
-  const [searchTerm, setSearchTerm] = useState(initialSearchTerm)
-  const [selectedType, setSelectedType] = useState('')
-  const [selectedLocation, setSelectedLocation] = useState('')
-  const [visibleCount, setVisibleCount] = useState(9)
-  const navigate = useNavigate()
-
+  const [searchTerm, setSearchTerm] = useState("all");
+  const [selectedType, setSelectedType] = useState("");
+  const [selectedLocation, setSelectedLocation] = useState("");
+  const [visibleCount, setVisibleCount] = useState(9);
+  const navigate = useNavigate();
   const { data: programmesResponse, isLoading } =
-    useSearchProgrammes(searchTerm)
-  const programmesResult = programmesResponse?.data?.doc
-    
-  const handleSearch = (query) => {
-    setSearchTerm(query)
-    // Clear filters when a search is performed
-    setSelectedType('')
-    setSelectedLocation('')
-    // Update URL without reloading the page
-    navigate(`/courses?search=${encodeURIComponent(query)}`, {
-      replace: true,
-    })
-  }
+    useSearchProgrammes(searchTerm);
+  const programmesResult = programmesResponse?.data?.doc;
 
-  const handleViewMore = () => {
-    setVisibleCount((prevCount) => prevCount + 9)
-  }
-
-  const handleFilterChange = (setter, e) => {
-    const value = e.target.value
-    setter(value)
-
-    // Clear search term when a filter is applied
-    if (value) {
-      setSearchTerm('')
-      // Remove search query from URL
-      navigate('/courses', { replace: true })
+  useEffect(() => {
+    const queryParams = new URLSearchParams(location.search);
+    const searchQuery = queryParams.get("search");
+    if (searchQuery) {
+      setSearchTerm(searchQuery);
     }
-  }
+  }, []);
 
   const filteredUniversities = useMemo(() => {
-    let filtered = programmesResult
-
+    let filtered = programmesResult || [];
     // Type filter
     if (selectedType) {
       filtered = filtered?.filter(
         (uni) => uni.type.toLowerCase() === selectedType.toLowerCase()
-      )
+      );
     }
     // Location filter
     if (selectedLocation) {
       filtered = filtered?.filter((uni) =>
         uni.location.toLowerCase().includes(selectedLocation.toLowerCase())
-      )
+      );
     }
-    return filtered
-  }, [programmesResult, searchTerm, selectedType, selectedLocation])
+    return filtered;
+  }, [programmesResult, selectedType, selectedLocation]);
+
+  const handleSearch = (query) => {
+    setSearchTerm(query);
+
+    // Clear filters when a search is performed
+    setSelectedType("");
+    setSelectedLocation("");
+    // Update URL without reloading the page
+    navigate(`/courses?search=${encodeURIComponent(query)}`, {
+      replace: true,
+    });
+  };
+
+  const handleFilterChange = (setter, e) => {
+    const value = e.target.value;
+    setter(value);
+  };
+
+  const handleViewMore = () => {
+    setVisibleCount((prevCount) => prevCount + 9);
+  };
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -113,10 +110,10 @@ const CourseSearch = () => {
             />
           </div>
         </div>
-        {searchTerm !== ' ' && (
+        {searchTerm !== "" && searchTerm !== "all" && (
           <h2 className="mb-10 text-xl lg:text-2xl font-medium">
-            Showing results for universities offering{' '}
-            <span className="">"{searchTerm}"</span>
+            Showing {programmesResult?.length} results for universities offering{" "}
+            <span className="text-orange-400">"{searchTerm}"</span>
           </h2>
         )}
 
@@ -144,7 +141,7 @@ const CourseSearch = () => {
         )}
       </Container>
     </div>
-  )
-}
+  );
+};
 
-export default CourseSearch
+export default CourseSearch;

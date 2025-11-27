@@ -1,52 +1,80 @@
-import { useState } from 'react'
-import { Link } from 'react-router-dom'
-import { useParams } from 'react-router-dom'
-import { ChevronRight } from 'lucide-react'
-import { useSingleUniversity } from '../hooks/useQueries'
+import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
+import { useParams } from "react-router-dom";
+import { ChevronRight } from "lucide-react";
+import UniversityDetailsSkeleton from "../components/features/universityDetailsPage/UniversityDetailsSkeleton";
+import { useSingleUniversity } from "../hooks/useQueries";
 
 const UniversityDetails = () => {
-  const { id } = useParams()
+  const { id } = useParams();
   const {
     data: universityDetailsResponse,
     isLoading,
     isError,
-  } = useSingleUniversity(id)
+  } = useSingleUniversity(id);
 
-  const university = universityDetailsResponse?.data?.university
-  const [visibleCount, setVisibleCount] = useState(4) // Number of programmes to show initially
+  const university = universityDetailsResponse?.data?.university;
+  const [visibleCount, setVisibleCount] = useState(4); // Number of programmes to show initially
+  const [screenSize, setScreenSize] = useState(window.innerWidth);
 
-  // Function to handle "Show More" button click
+  // updating screen size as window size changes
+  useEffect(() => {
+    const handleResize = () => setScreenSize(window.innerWidth);
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
+  // using updated screen size to set visible count
+  useEffect(() => {
+    if (screenSize >= 1024) {
+      setVisibleCount(8);
+    } else if (screenSize >= 768) {
+      setVisibleCount(6);
+    } else {
+      setVisibleCount(4);
+    }
+  }, [screenSize]);
+
   const handleShowMore = () => {
-    setVisibleCount((prevCount) => prevCount + 6) // Increase the count by 6
-  }
+    if (screenSize >= 1024) {
+      setVisibleCount((prevCount) => prevCount + 8); // Increase the count by depending on screen size
+    } else if (screenSize >= 768) {
+      setVisibleCount((prevCount) => prevCount + 6);
+    } else {
+      setVisibleCount((prevCount) => prevCount + 4);
+    }
+  };
 
-  if (isLoading) {
-    return (
-      <div className="min-h-screen flex justify-center items-center bg-gray-100">
-        <div className="animate-spin h-10 w-10 border-4 border-blue-500 border-t-transparent rounded-full"></div>
-      </div>
-    )
-  }
+  const handleShowLess = () => {
+    if (screenSize >= 1024) {
+      setVisibleCount(4);
+    } else if (screenSize >= 768) {
+      setVisibleCount(3);
+    } else {
+      setVisibleCount(2);
+    }
+  };
 
   if (isError) {
     return (
-      <div className="min-h-screen flex justify-center items-center bg-gray-100">
-        <div className="text-center">
+      <div className="min-h-screen p-6 mx-auto w-full flex justify-center items-center bg-gray-50">
+        <div className="text-center p-8 bg-white rounded-lg shadow-md">
           <h2 className="text-2xl font-bold text-gray-700">
             University Not Found
           </h2>
           <p className="text-gray-500">Try again or check the ID in the URL.</p>
         </div>
       </div>
-    )
+    );
   }
 
   const courses = university?.notable_programs?.flatMap((faculty) =>
     faculty.Courses.map((course) => course.course)
-  )
+  );
 
   return (
     <div className="min-h-screen p-6 mx-auto w-full">
+      {isLoading && <UniversityDetailsSkeleton />}
       {/* Basic Info */}
       <div className="flex max-w-5xl items-center text-gray-600 text-sm mb-4 font-semibold">
         <Link to="/" className="">
@@ -61,8 +89,12 @@ const UniversityDetails = () => {
       {university && (
         <>
           <div className="flex flex-col gap-8 w-full">
-            <div className="bg-gray-100 px-6 md:px-20 flex flex-col sm:flex-row justify-center items-center gap-10 py-6 mx-auto w-full rounded-md">
-              <img src={university.image} alt={university.university_name} className='rounded-md h-50 w-100 object-cover' />
+            <div className="bg-gray-100 px-6 md:px-16 flex flex-col md:flex-row justify-center gap-10 md:gap-32 py-6 mx-auto rounded-md">
+              <img
+                src={university.image}
+                alt={university.university_name}
+                className="rounded-md h-50 w-100 object-cover"
+              />
               <div className="flex flex-col items-start gap-1 text-sm sm:text-base">
                 <h1 className="text-lg sm:text-2xl font-semibold text-black">
                   {university.university_name}
@@ -72,7 +104,7 @@ const UniversityDetails = () => {
                 <p className="text-gray-600">{university.school_fees_range}</p>
                 <a
                   href={
-                    university.website.startsWith('https://')
+                    university.website.startsWith("https://")
                       ? university.website
                       : `https://${university.website}`
                   }
@@ -85,37 +117,47 @@ const UniversityDetails = () => {
               </div>
             </div>
             {/* Courses Offered */}
-            <div className="p-10 bg-gray-100 rounded-md">
+            <div className="p-5 md:p-10 bg-gray-100 rounded-md">
               <div className="max-w-5xl mx-auto flex flex-col justify-center items-center gap-6">
                 <h2 className="text-xl md:text-2xl font-semibold text-black text-center">
-                  Courses Offered in {university.university_name}
+                  Courses Offered ({courses.length})
                 </h2>
-                <div className="place-items-center grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 w-full">
+                <div className="place-items-center grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 w-full">
                   {courses.slice(0, visibleCount).map((course, index) => (
                     <Link
                       key={index}
                       to={`/courses?search=${encodeURIComponent(course)}`}
-                      className="bg-blue-200 text-sm px-3 py-2 text-center rounded-md m-1 max-w-52 cursor-pointer hover:bg-blue-300 transition"
+                      className="bg-blue-200 h-10 w-36 md:w-48 p-3 text-xs md:text-sm flex items-center justify-center text-center rounded-md m-1 max-w-52 cursor-pointer hover:bg-blue-300 transition overflow-hidden"
                     >
                       {course}
                     </Link>
                   ))}
                 </div>
-                {visibleCount < courses.length && (
-                  <button
-                    onClick={handleShowMore}
-                    className="mt-4 bg-orange-400 text-white px-6 py-2 rounded-lg font-semibold hover:bg-orange-600 transition"
-                  >
-                    Show More
-                  </button>
-                )}
+                <div className="flex gap-5">
+                  {visibleCount < courses.length && (
+                    <button
+                      onClick={handleShowMore}
+                      className="mt-4 bg-orange-400 text-white px-6 py-2 rounded-lg font-semibold hover:bg-orange-600 transition cursor-pointer"
+                    >
+                      Show More
+                    </button>
+                  )}
+                  {courses.length < visibleCount && (
+                    <button
+                      onClick={handleShowLess}
+                      className="mt-4 bg-gray-200 text-gray-800 px-6 py-2 rounded-lg font-semibold hover:bg-gray-300 transition cursor-pointer"
+                    >
+                      Show Less
+                    </button>
+                  )}
+                </div>
               </div>
             </div>
           </div>
         </>
       )}
     </div>
-  )
-}
+  );
+};
 
-export default UniversityDetails
+export default UniversityDetails;
