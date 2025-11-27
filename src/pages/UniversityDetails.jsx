@@ -1,9 +1,10 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { useParams } from "react-router-dom";
-import { ChevronRight } from "lucide-react";
+import { ChevronRight, Eye, MapPin, Building2, Wallet, ExternalLink } from "lucide-react";
 import UniversityDetailsSkeleton from "../components/features/universityDetailsPage/UniversityDetailsSkeleton";
 import { useSingleUniversity } from "../hooks/useQueries";
+import CourseRequirementsModal from "../components/features/universityDetailsPage/CourseRequirementsModal";
 
 const UniversityDetails = () => {
   const { id } = useParams();
@@ -16,6 +17,8 @@ const UniversityDetails = () => {
   const university = universityDetailsResponse?.data?.university;
   const [visibleCount, setVisibleCount] = useState(4); // Number of programmes to show initially
   const [screenSize, setScreenSize] = useState(window.innerWidth);
+  const [isModalOpen, setModalOpen] = useState(false);
+  const [selectedCourse, setSelectedCourse] = useState(null);
 
   // updating screen size as window size changes
   useEffect(() => {
@@ -55,6 +58,23 @@ const UniversityDetails = () => {
     }
   };
 
+  const handleViewRequirements = (courseName) => {
+    let foundCourse = null;
+    university?.notable_programs.forEach((faculty) => {
+      const course = faculty.Courses.find((c) => c.course === courseName);
+      if (course) {
+        foundCourse = {
+          name: course.course,
+          requirements: course.requirements,
+        };
+      }
+    });
+    if (foundCourse) {
+      setSelectedCourse(foundCourse);
+      setModalOpen(true);
+    }
+  };
+
   if (isError) {
     return (
       <div className="min-h-screen p-6 mx-auto w-full flex justify-center items-center bg-gray-50">
@@ -68,16 +88,18 @@ const UniversityDetails = () => {
     );
   }
 
-  const courses = university?.notable_programs?.flatMap((faculty) =>
-    faculty.Courses.map((course) => course.course)
-  );
+  const allCourses =
+    university?.notable_programs?.flatMap((faculty) =>
+      faculty.Courses.map((course) => course.course)
+    ) || [];
 
   return (
     <div className="min-h-screen p-6 mx-auto w-full">
       {isLoading && <UniversityDetailsSkeleton />}
+      
       {/* Basic Info */}
       <div className="flex max-w-5xl items-center text-gray-600 text-sm mb-4 font-semibold">
-        <Link to="/" className="">
+        <Link to="/" className="hover:text-orange-500">
           Home
         </Link>
         <span className="mx-2">
@@ -86,22 +108,34 @@ const UniversityDetails = () => {
         <span className="text-[#F49E0B]">{university?.university_name}</span>
       </div>
 
-      {university && (
+      {!isLoading && university && (
         <>
           <div className="flex flex-col gap-8 w-full">
-            <div className="bg-gray-100 px-6 md:px-16 flex flex-col md:flex-row justify-center gap-10 md:gap-32 py-6 mx-auto rounded-md">
+            {/* University Header Card */}
+            <div className="md:w-3/4 mx-auto bg-gray-100 border border-gray-200 rounded-md shadow-sm overflow-hidden flex flex-col md:flex-row">
               <img
                 src={university.image}
                 alt={university.university_name}
-                className="rounded-md h-50 w-100 object-cover"
+                className="w-full md:w-1/3 h-52 md:h-auto object-cover rounded-md"
               />
-              <div className="flex flex-col items-start gap-1 text-sm sm:text-base">
-                <h1 className="text-lg sm:text-2xl font-semibold text-black">
+              <div className="flex flex-col p-6 md:p-8">
+                <h1 className="text-2xl sm:text-4xl font-bold text-gray-900">
                   {university.university_name}
                 </h1>
-                <p className="text-gray-600">{university.location}</p>
-                <p className="text-gray-600">{university.type}</p>
-                <p className="text-gray-600">{university.school_fees_range}</p>
+                <div className="mt-4 space-y-3 text-gray-600">
+                  <div className="flex items-center gap-3">
+                    <MapPin className="w-5 h-5 text-gray-400" />
+                    <span className="text-base">{university.location}</span>
+                  </div>
+                  <div className="flex items-center gap-3">
+                    <Building2 className="w-5 h-5 text-gray-400" />
+                    <span className="text-base">{university.type} University</span>
+                  </div>
+                  <div className="flex items-center gap-3">
+                    <Wallet className="w-5 h-5 text-gray-400" />
+                    <span className="text-base">{university.school_fees_range}</span>
+                  </div>
+                </div>
                 <a
                   href={
                     university.website.startsWith("https://")
@@ -110,31 +144,44 @@ const UniversityDetails = () => {
                   }
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="my-1 text-white text-sm bg-[#F49E0B] px-3 py-2.5 rounded-md"
+                  className="mt-6 inline-flex items-center justify-center gap-2 text-white font-semibold bg-orange-400 px-5 py-3 rounded-lg hover:bg-orange-500 transition-all shadow-sm hover:shadow-md transform hover:-translate-y-0.5"
                 >
                   View Official Website
+                  <ExternalLink className="w-4 h-4" />
                 </a>
               </div>
             </div>
+
             {/* Courses Offered */}
             <div className="p-5 md:p-10 bg-gray-100 rounded-md">
               <div className="max-w-5xl mx-auto flex flex-col justify-center items-center gap-6">
                 <h2 className="text-xl md:text-2xl font-semibold text-black text-center">
-                  Courses Offered ({courses.length})
+                  Courses Offered ({allCourses.length})
                 </h2>
                 <div className="place-items-center grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 w-full">
-                  {courses.slice(0, visibleCount).map((course, index) => (
-                    <Link
+                  {allCourses.slice(0, visibleCount).map((course, index) => (
+                    <div
                       key={index}
-                      to={`/courses?search=${encodeURIComponent(course)}`}
-                      className="bg-blue-200 h-10 w-36 md:w-48 p-3 text-xs md:text-sm flex items-center justify-center text-center rounded-md m-1 max-w-52 cursor-pointer hover:bg-blue-300 transition overflow-hidden"
+                      className="bg-white rounded-lg flex items-center group w-full shadow-sm hover:shadow-md transition-shadow"
                     >
-                      {course}
-                    </Link>
+                      <Link
+                        to={`/courses?search=${encodeURIComponent(course)}`}
+                        className="flex-grow p-3 text-xs md:text-sm text-center text-gray-800 hover:text-orange-500 transition-colors overflow-hidden text-ellipsis whitespace-nowrap"
+                      >
+                        {course}
+                      </Link>
+                      <button
+                        onClick={() => handleViewRequirements(course)}
+                        className="p-3 border-l border-gray-200 text-gray-500 hover:bg-blue-100 hover:text-blue-600 rounded-r-lg transition-colors"
+                        title="View Requirements"
+                      >
+                        <Eye className="w-4 h-4" />
+                      </button>
+                    </div>
                   ))}
                 </div>
                 <div className="flex gap-5">
-                  {visibleCount < courses.length && (
+                  {visibleCount < allCourses.length && (
                     <button
                       onClick={handleShowMore}
                       className="mt-4 bg-orange-400 text-white px-6 py-2 rounded-lg font-semibold hover:bg-orange-600 transition cursor-pointer"
@@ -142,7 +189,13 @@ const UniversityDetails = () => {
                       Show More
                     </button>
                   )}
-                  {courses.length < visibleCount && (
+                  {allCourses.length >
+                    (screenSize >= 1024
+                      ? 8
+                      : screenSize >= 768
+                      ? 6
+                      : 4) &&
+                    allCourses.length < visibleCount && (
                     <button
                       onClick={handleShowLess}
                       className="mt-4 bg-gray-200 text-gray-800 px-6 py-2 rounded-lg font-semibold hover:bg-gray-300 transition cursor-pointer"
@@ -156,6 +209,11 @@ const UniversityDetails = () => {
           </div>
         </>
       )}
+      <CourseRequirementsModal
+        isOpen={isModalOpen}
+        onClose={() => setModalOpen(false)}
+        courseData={selectedCourse}
+      />
     </div>
   );
 };

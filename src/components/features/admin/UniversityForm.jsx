@@ -1,12 +1,15 @@
 import FormInput from "../../global/FormInput";
 import SelectFilterOption from "../../global/SelectFilterOption";
 import filterData from "../../../data/filterData";
+import FacultyEditor from "./FacultyEditor";
+import { Plus } from "lucide-react";
 
 const UniversityForm = ({
   formData,
   handleChange,
   selectedUniversity,
   actionType,
+  setFormData,
 }) => {
   const uniLocation = filterData.universityLocation;
   const uniType = filterData.universityType;
@@ -19,6 +22,54 @@ const UniversityForm = ({
     const { name, value } = e.target;
     // This component doesn't use setters, but we can adapt the call
     handleChange({ target: { name, value } });
+  };
+
+  // --- Dynamic Form Handlers for Notable Programs ---
+
+  const handleFacultyChange = (facultyIndex, field, value) => {
+    const updatedPrograms = [...formData.notable_programs];
+    updatedPrograms[facultyIndex][field] = value;
+    setFormData({ ...formData, notable_programs: updatedPrograms });
+  };
+
+  const handleCourseChange = (facultyIndex, courseIndex, field, value) => {
+    const updatedPrograms = [...formData.notable_programs];
+    updatedPrograms[facultyIndex].Courses[courseIndex][field] = value;
+    setFormData({ ...formData, notable_programs: updatedPrograms });
+  };
+
+  const addFaculty = () => {
+    setFormData({
+      ...formData,
+      notable_programs: [
+        ...formData.notable_programs,
+        { Faculty: "", Courses: [] },
+      ],
+    });
+  };
+
+  const removeFaculty = (facultyIndex) => {
+    const updatedPrograms = formData.notable_programs.filter(
+      (_, i) => i !== facultyIndex
+    );
+    setFormData({ ...formData, notable_programs: updatedPrograms });
+  };
+
+  const addCourse = (facultyIndex) => {
+    const updatedPrograms = [...formData.notable_programs];
+    updatedPrograms[facultyIndex].Courses.push({
+      course: "",
+      requirements: "",
+    });
+    setFormData({ ...formData, notable_programs: updatedPrograms });
+  };
+
+  const removeCourse = (facultyIndex, courseIndex) => {
+    const updatedPrograms = [...formData.notable_programs];
+    updatedPrograms[facultyIndex].Courses = updatedPrograms[
+      facultyIndex
+    ].Courses.filter((_, i) => i !== courseIndex);
+    setFormData({ ...formData, notable_programs: updatedPrograms });
   };
 
   return (
@@ -59,15 +110,6 @@ const UniversityForm = ({
       </div>
 
       <FormInput
-        name="programmes"
-        label="Courses Offered (comma-separated)"
-        value={formData.programmes}
-        handleInputChange={handleInputChange}
-        placeholder="e.g. Computer Science, Medicine"
-        className="w-full px-3 py-2 border border-gray-300 rounded-lg"
-      />
-
-      <FormInput
         name="schoolFees"
         label="Tuition Fee Range"
         value={formData.schoolFees}
@@ -105,28 +147,6 @@ const UniversityForm = ({
 
       <div className="md:col-span-2">
         <FormInput
-          name="Address"
-          label="University Address"
-          value={formData.address}
-          handleInputChange={handleInputChange}
-          placeholder="e.g. 11, Crescent Rd..."
-          className="w-full px-3 py-2 border border-gray-300 rounded-lg"
-        />
-      </div>
-
-      <div className="md:col-span-2">
-        <FormInput
-          name="requirements"
-          label="Requirements (comma-separated)"
-          value={formData.requirements}
-          handleInputChange={handleInputChange}
-          placeholder="General admission requirements"
-          className="w-full px-3 py-2 border border-gray-300 rounded-lg"
-        />
-      </div>
-
-      <div className="md:col-span-2">
-        <FormInput
           name="notes"
           label="Notes"
           value={formData.notes}
@@ -135,6 +155,36 @@ const UniversityForm = ({
           className="w-full px-3 py-2 border border-gray-300 rounded-lg"
         />
       </div>
+
+      {/* --- Notable Programs Dynamic Editor --- */}
+      <div className="md:col-span-2 p-4 bg-gray-50 rounded-lg border">
+        <h3 className="text-xl font-bold text-gray-800 mb-4">
+          Faculties & Courses
+        </h3>
+        <div className="space-y-4">
+          {formData.notable_programs?.map((faculty, facultyIndex) => (
+            <FacultyEditor
+              key={facultyIndex}
+              faculty={faculty}
+              facultyIndex={facultyIndex}
+              handleFacultyChange={handleFacultyChange}
+              removeFaculty={removeFaculty}
+              addCourse={addCourse}
+              handleCourseChange={handleCourseChange}
+              removeCourse={removeCourse}
+            />
+          ))}
+        </div>
+        <button
+          type="button"
+          onClick={addFaculty}
+          className="mt-4 flex items-center gap-2 text-sm font-semibold text-green-600 hover:text-green-800 cursor-pointer"
+        >
+          {" "}
+          <Plus size={16} /> Add Faculty{" "}
+        </button>
+      </div>
+      {/* --- End Notable Programs --- */}
 
       <div className="md:col-span-2">
         <div className="space-y-1.5">

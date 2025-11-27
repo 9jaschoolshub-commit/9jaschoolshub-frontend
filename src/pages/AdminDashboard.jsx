@@ -14,13 +14,12 @@ export default function AdminDashboard() {
     unversityName: "",
     type: "Federal",
     location: "Lagos",
-    programmes: "",
+    notable_programs: [], // Changed from programmes string
     schoolFees: "",
     website: "",
     email: "",
     phone: "",
-    address:"",
-    requirements: "",
+    address: "",
     notes: "",
     image: null,
   });
@@ -112,18 +111,12 @@ export default function AdminDashboard() {
       unversityName: university.university_name,
       type: university.type,
       location: university.location,
-      // Flatten the courses from all faculties into a single string
-      programmes: university.notable_programs
-        .flatMap((faculty) => faculty.Courses.map((course) => course.course))
-        .join(", "),
+      notable_programs: university.notable_programs || [], // Use the actual nested array
       schoolFees: university.school_fees_range,
       website: university.website,
       email: university.email,
       phone: university.phone_number,
-      address:university.address,
-      // Requirements are nested inside courses, so we can't easily populate this.
-      // will address later
-      requirements: "",
+      address: university.address,
       notes: university.notes,
       image: null,
     });
@@ -145,25 +138,12 @@ export default function AdminDashboard() {
         payload.append("UniversityName", formData.unversityName);
         payload.append("type", formData.type);
         payload.append("location", formData.location);
-        payload.append(
-          "programmes",
-          formData.programmes
-            .split(",")
-            .map((course) => course.trim())
-            .join(",")
-        );
+        payload.append("notable_programs", JSON.stringify(formData.notable_programs));
         payload.append("schoolFees", formData.schoolFees);
         payload.append("website", formData.website);
         payload.append("email", formData.email);
         payload.append("phone", formData.phone);
-        payload.append("address", formData.address)
-        payload.append(
-          "requirements",
-          formData.requirements
-            .split(",")
-            .map((item) => item.trim())
-            .join(",")
-        );
+        payload.append("address", formData.address);
         payload.append("notes", formData.notes);
         if (formData.image) {
           payload.append("image", formData.image);
@@ -191,22 +171,11 @@ export default function AdminDashboard() {
           payload.append("location", formData.location);
         }
 
-        const originalProgrammes = selectedUniversity.notable_programs
-          .flatMap((faculty) => faculty.Courses.map((course) => course.course))
-          .join(", ");
-        if (formData.programmes !== originalProgrammes) {
-          payload.append(
-            "programmes",
-            formData.programmes
-              .split(",")
-              .map((c) => c.trim())
-              .join(",")
-          );
-        }
-
+        payload.append("notable_programs", JSON.stringify(formData.notable_programs));
         if (formData.schoolFees !== selectedUniversity.school_fees_range) {
           payload.append("schoolFees", formData.schoolFees);
         }
+
         if (formData.website !== selectedUniversity.website) {
           payload.append("website", formData.website);
         }
@@ -222,17 +191,6 @@ export default function AdminDashboard() {
         if (formData.notes !== selectedUniversity.notes) {
           payload.append("notes", formData.notes);
         }
-        // Requirements are not pre-filled, so any input is considered a change
-        if (formData.requirements) {
-          payload.append(
-            "requirements",
-            formData.requirements
-              .split(",")
-              .map((r) => r.trim())
-              .join(",")
-          );
-        }
-        // Always append a new image if one is selected
         if (formData.image) {
           payload.append("image", formData.image);
         }
@@ -266,13 +224,12 @@ export default function AdminDashboard() {
       unversityName: "",
       type: "Federal",
       location: "Lagos",
-      programmes: "",
+      notable_programs: [],
       schoolFees: "",
       website: "",
       email: "",
       phone: "",
       address: "",
-      requirements: "",
       notes: "",
       image: null,
     });
@@ -317,6 +274,7 @@ export default function AdminDashboard() {
                   formData={formData}
                   handleChange={handleChange}
                   selectedUniversity={selectedUniversity}
+                  setFormData={setFormData}
                   actionType={actionType}
                 />
               )}
