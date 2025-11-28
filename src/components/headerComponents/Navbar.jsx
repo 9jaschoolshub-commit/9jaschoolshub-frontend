@@ -1,11 +1,4 @@
-// <nav className="hidden md:flex flex-1 text-lg gap-10">
-//     {navLinks.map((navLink) => (
-//         <NavLinks key={navLink.name} {...navLink} />
-//     ))}
-// </nav>
-
-import { Link } from 'react-router';
-// import MobileDropdown from "./MobileDropdown";
+import { Link } from "react-router";
 
 const navLinks = [
     { name: "Home", href: "/" },
@@ -13,24 +6,19 @@ const navLinks = [
     { name: "Courses", href: "/courses" },
 ];
 
-export default function Navbar({ isMobileOpen, closeMobileMenu  }) {
+export default function Navbar({ closeMobileMenu }) {
     return (
-        <div className="absolute left-0 top-16 w-full bg-white shadow-md z-50">
+        <nav className="flex flex-col md:flex-row gap-6">
             {navLinks.map((navLink) => (
                 <Link
                     key={navLink.name}
-                    href={navLink.href}
+                    to={navLink.href}
                     onClick={closeMobileMenu}
+                    className="text-lg font-medium text-black md:text-white px-2 py-4 md:py-0 border-b border-gray-300 md:border-none"
                 >
-                    <div className="px-6 py-6 border-b text-lg font-medium text-[#0A0A0A]">
-                        {navLink.name}
-                    </div>
+                    {navLink.name}
                 </Link>
             ))}
-
-            {isMobileOpen && (
-                <MobileDropdown closeMenu={closeMobileMenu} />
-            )}
-        </div>
+        </nav>
     );
 }
