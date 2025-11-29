@@ -1,7 +1,7 @@
 import { navLinks } from "../../../data/navData";
 import NavLinks from "./NavLinks";
 
-const Navbar = ({ closeMobileMenu }) => {
+const Navbar = ({ isMobileOpen, closeMobileMenu }) => {
   return (
     <>
       {/* desktop nav */}
@@ -12,8 +12,8 @@ const Navbar = ({ closeMobileMenu }) => {
       </nav>
 
       {/* mobile nav */}
-      {closeMobileMenu && (
-        <nav className="md:hidden absolute bg-white top-15 w-full h-auto left-0 p-4 flex flex-col gap-10 z-100">
+      {isMobileOpen && (
+        <nav className="md:hidden absolute bg-white top-15 w-full h-auto left-0 px-4 py-8 flex flex-col gap-10 z-100">
           {navLinks.map((navLink) => (
             <div key={navLink.name} className="w-full text-xl border-t-2 border-solid border-gray-400 pt-8">
               <NavLinks onClick={closeMobileMenu} {...navLink} />

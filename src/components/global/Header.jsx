@@ -25,7 +25,7 @@ const Header = () => {
 
         {/* Navbar */}
         <div>
-          <Navbar closeMobileMenu={isMobileOpen} />
+          <Navbar isMobileOpen={isMobileOpen} closeMobileMenu={toggleMenu} />
         </div>
       </header>
     </Container>

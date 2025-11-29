@@ -1,7 +1,15 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { useParams } from "react-router-dom";
-import { ChevronRight, Eye, MapPin, Building2, Wallet, ExternalLink } from "lucide-react";
+import {
+  ChevronRight,
+  Eye,
+  MapPin,
+  Building2,
+  Wallet,
+  ExternalLink,
+  NotebookText,
+} from "lucide-react";
 import UniversityDetailsSkeleton from "../components/features/universityDetailsPage/UniversityDetailsSkeleton";
 import { useSingleUniversity } from "../hooks/useQueries";
 import CourseRequirementsModal from "../components/features/universityDetailsPage/CourseRequirementsModal";
@@ -96,7 +104,7 @@ const UniversityDetails = () => {
   return (
     <div className="min-h-screen p-6 mx-auto w-full">
       {isLoading && <UniversityDetailsSkeleton />}
-      
+
       {/* Basic Info */}
       <div className="flex max-w-5xl items-center text-gray-600 text-sm mb-4 font-semibold">
         <Link to="/" className="hover:text-orange-500">
@@ -112,7 +120,7 @@ const UniversityDetails = () => {
         <>
           <div className="flex flex-col gap-8 w-full">
             {/* University Header Card */}
-            <div className="md:w-3/4 mx-auto bg-gray-100 border border-gray-200 rounded-md shadow-sm overflow-hidden flex flex-col md:flex-row">
+            <div className="w-full flex md:px-72 justify-around flex-col md:flex-row">
               <img
                 src={university.image}
                 alt={university.university_name}
@@ -122,19 +130,29 @@ const UniversityDetails = () => {
                 <h1 className="text-2xl sm:text-4xl font-bold text-gray-900">
                   {university.university_name}
                 </h1>
-                <div className="mt-4 space-y-3 text-gray-600">
+                <div className="mt-4 space-y-3 text-gray-800">
                   <div className="flex items-center gap-3">
-                    <MapPin className="w-5 h-5 text-gray-400" />
+                    <MapPin className="w-5 h-5" />
                     <span className="text-base">{university.location}</span>
                   </div>
                   <div className="flex items-center gap-3">
-                    <Building2 className="w-5 h-5 text-gray-400" />
-                    <span className="text-base">{university.type} University</span>
+                    <Building2 className="w-5 h-5" />
+                    <span className="text-base">
+                      {university.type} University
+                    </span>
                   </div>
                   <div className="flex items-center gap-3">
-                    <Wallet className="w-5 h-5 text-gray-400" />
-                    <span className="text-base">{university.school_fees_range}</span>
+                    <Wallet className="w-5 h-5" />
+                    <span className="text-base">
+                      {university.school_fees_range}
+                    </span>
                   </div>
+                  {university.notes && (
+                    <div className="flex items-center gap-3">
+                      <NotebookText className="w-5 h-5" />
+                      <span className="text-base">{university.notes}</span>
+                    </div>
+                  )}
                 </div>
                 <a
                   href={
@@ -190,19 +208,15 @@ const UniversityDetails = () => {
                     </button>
                   )}
                   {allCourses.length >
-                    (screenSize >= 1024
-                      ? 8
-                      : screenSize >= 768
-                      ? 6
-                      : 4) &&
+                    (screenSize >= 1024 ? 8 : screenSize >= 768 ? 6 : 4) &&
                     allCourses.length < visibleCount && (
-                    <button
-                      onClick={handleShowLess}
-                      className="mt-4 bg-gray-200 text-gray-800 px-6 py-2 rounded-lg font-semibold hover:bg-gray-300 transition cursor-pointer"
-                    >
-                      Show Less
-                    </button>
-                  )}
+                      <button
+                        onClick={handleShowLess}
+                        className="mt-4 bg-gray-200 text-gray-800 px-6 py-2 rounded-lg font-semibold hover:bg-gray-300 transition cursor-pointer"
+                      >
+                        Show Less
+                      </button>
+                    )}
                 </div>
               </div>
             </div>
