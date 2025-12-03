@@ -1,5 +1,5 @@
 import axios from 'axios'
-// import useStore from "../hooks/useStore";
+import useStore from '../hooks/useStore'
 
 const API_BASE_URL = import.meta.env.VITE_API_URL
 
@@ -12,10 +12,7 @@ const api = axios.create({
 
 api.interceptors.request.use(
   (config) => {
-    /*Todo
-    -Get apikey from zustand so it can be attached to headers
-    */
-    const apiKey = 'logic here'
+    const apiKey = useStore.getState().apiKey
 
     if (apiKey) {
       config.headers['API_KEY'] = apiKey // Attach token to headers
