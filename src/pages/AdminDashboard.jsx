@@ -7,6 +7,7 @@ import AdminHeader from "../components/features/admin/AdminHeader";
 import UniversitySearch from "../components/features/admin/UniversitySearch";
 import UniversityForm from "../components/features/admin/UniversityForm";
 import SignedOutView from "../components/features/admin/SignedOutView";
+import useStore from "../hooks/useStore";
 
 export default function AdminDashboard() {
   const [formData, setFormData] = useState({
@@ -14,7 +15,7 @@ export default function AdminDashboard() {
     unversityName: "",
     type: "Federal",
     location: "Lagos",
-    notable_programs: [], // Changed from programmes string
+    notable_programs: [],
     schoolFees: "",
     website: "",
     email: "",
@@ -29,6 +30,8 @@ export default function AdminDashboard() {
   const [searchResults, setSearchResults] = useState([]);
   const [selectedUniversity, setSelectedUniversity] = useState(null);
   const { getToken, isSignedIn } = useAuth();
+  const setAuthToken = useStore((state) => state.setAuthToken);
+  const setApiKey = useStore((state) => state.setApiKey);
 
   const actionTypes = [
     { option: "add", label: "Add University" },
@@ -40,11 +43,9 @@ export default function AdminDashboard() {
     const setup = async () => {
       if (isSignedIn) {
         try {
-          /*
-          Todo
-          Get auth token from Clerk and save to Zustand
-          */
-
+          // Get auth token from Clerk and save to Zustand
+          const authToken = await getToken();
+          setAuthToken(authToken);
           // Then call getApiKeyFromServer() to get apikey from the server
           await getApiKeyFromServer();
         } catch (error) {
@@ -52,9 +53,8 @@ export default function AdminDashboard() {
           console.error("error message:", error);
         }
       } else {
-        /*Todo
-        Delete auth token and apikey from zustand
-        */
+        setAuthToken(null);
+        setApiKey(null);
       }
     };
     setup();
@@ -87,7 +87,7 @@ export default function AdminDashboard() {
     setLoading(true);
     try {
       const results = await universityAPI.searchUniversities(query);
-      console.log('search results:', results)
+      // console.log("search results:", results);
 
       setSearchResults(results.data.doc || []);
     } catch (error) {
@@ -138,7 +138,10 @@ export default function AdminDashboard() {
         payload.append("UniversityName", formData.unversityName);
         payload.append("type", formData.type);
         payload.append("location", formData.location);
-        payload.append("notable_programs", JSON.stringify(formData.notable_programs));
+        payload.append(
+          "notable_programs",
+          JSON.stringify(formData.notable_programs)
+        );
         payload.append("schoolFees", formData.schoolFees);
         payload.append("website", formData.website);
         payload.append("email", formData.email);
@@ -171,7 +174,10 @@ export default function AdminDashboard() {
           payload.append("location", formData.location);
         }
 
-        payload.append("notable_programs", JSON.stringify(formData.notable_programs));
+        payload.append(
+          "notable_programs",
+          JSON.stringify(formData.notable_programs)
+        );
         if (formData.schoolFees !== selectedUniversity.school_fees_range) {
           payload.append("schoolFees", formData.schoolFees);
         }

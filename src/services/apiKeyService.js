@@ -2,15 +2,14 @@ import useStore from '../hooks/useStore'
 import axios from 'axios'
 
 export const getApiKeyFromServer = async () => {
-  const apiKey = useStore.getState().apiKey
-  if (apiKey) {
-    return apiKey
+  const saved_key = useStore.getState().api_key
+  if (saved_key) {
+    return saved_key
   }
   try {
-    const res = await axios.get(`${import.meta.env.VITE_APP_API_URL}/getApiKey`)
-    const apiKey = res.data.apiKey
-    useStore.getState.setApiKey(apiKey)
-    return apiKey
+    const res = await axios.get(`${import.meta.env.VITE_API_URL}/getApiKey`)
+    const api_key = res.data.apiKey
+    useStore.setState({ api_key })
   } catch (error) {
     console.error('Failed to get API key:', error)
     throw new Error('Unable to retrieve API key')
