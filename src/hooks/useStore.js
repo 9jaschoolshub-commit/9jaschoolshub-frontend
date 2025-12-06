@@ -1,11 +1,18 @@
-// import { create } from "zustand";
-// import { persist } from "zustand/middleware";
+import { create } from 'zustand'
+import { persist } from 'zustand/middleware'
 
-/**
- * Todo
- * Set up zustand for this application here
- */
+const useStore = create(
+  persist(
+    (set) => ({
+      authToken: null,
+      setAuthToken: (authToken) => set({ authToken }),
+      apiKey: null,
+      setApiKey: (apiKey) => set({ apiKey }),
+    }),
+    {
+      name: 'auth-storage',
+    }
+  )
+)
 
-const useStore = "logic here"
-
-export default useStore;
+export default useStore

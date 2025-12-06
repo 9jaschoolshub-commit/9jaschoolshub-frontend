@@ -11,7 +11,7 @@ import {
 import filterData from '../data/filterData'
 import { toast } from 'react-toastify'
 import sideImage from '../assets/images/bottom-image.webp'
-// import useStore from "../hooks/useStore";
+import useStore from '../hooks/useStore'
 
 export default function Dashboard() {
   const [formData, setFormData] = useState({
@@ -34,7 +34,8 @@ export default function Dashboard() {
   const [searchResults, setSearchResults] = useState([])
   const [selectedUniversity, setSelectedUniversity] = useState(null)
   const { getToken, isSignedIn } = useAuth()
-
+  const setAuthToken = useStore((state) => state.setAuthToken)
+  const setApiKey = useStore((state) => state.setApiKey)
   const actionTypes = [
     { option: 'add', label: 'add university' },
     { option: 'update', label: 'update university' },
@@ -48,21 +49,18 @@ export default function Dashboard() {
     const setup = async () => {
       if (isSignedIn) {
         try {
-          /*
-          Todo
-          Get auth token from Clerk and save to Zustand
-          */
-
+          // Get auth token from Clerk and save to Zustand
+          const authToken = await getToken()
+          setAuthToken(authToken)
           // Then call getApiKeyFromServer() to get apikey from the server
           await getApiKeyFromServer()
         } catch (error) {
           toast.error('Failed to initialize admin session.')
           console.error('error message:', error)
         }
-      }else{
-        /*Todo
-        Delete auth token and apikey from zustand
-        */
+      } else {
+        setAuthToken(null)
+        setApiKey(null)
       }
     }
     setup()
