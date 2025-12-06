@@ -10,9 +10,9 @@ import {
   ExternalLink,
   NotebookText,
 } from "lucide-react";
-import UniversityDetailsSkeleton from "../components/features/universityDetailsPage/UniversityDetailsSkeleton";
+import UniversityDetailsSkeleton from "../components/features/universityDetails/UniversityDetailsSkeleton";
 import { useSingleUniversity } from "../hooks/useQueries";
-import CourseRequirementsModal from "../components/features/universityDetailsPage/CourseRequirementsModal";
+import CourseRequirementsModal from "../components/features/universityDetails/CourseRequirementsModal";
 
 const UniversityDetails = () => {
   const { id } = useParams();
