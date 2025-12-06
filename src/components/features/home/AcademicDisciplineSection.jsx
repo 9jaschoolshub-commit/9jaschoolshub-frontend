@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import { academicDisciplineSectionInfo } from "../../../data/homepageData";
-import AcademicDisciplineCard from "../homePage/AcademicDisciplineCard";
+import AcademicDisciplineCard from "./AcademicDisciplineCard";
 import Container from "../../global/Container";
 import SectionHeading from "../../global/SectionHeading";
 
