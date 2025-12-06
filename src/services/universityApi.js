@@ -12,10 +12,10 @@ const api = axios.create({
 
 api.interceptors.request.use(
   (config) => {
-    const apiKey = useStore.getState().apiKey
-
+    const apiKey = useStore.getState().api_key
+    
     if (apiKey) {
-      config.headers['API_KEY'] = apiKey // Attach token to headers
+      config.headers['API_KEY'] = apiKey 
     }
 
     return config

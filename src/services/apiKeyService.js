@@ -10,6 +10,8 @@ export const getApiKeyFromServer = async () => {
     const res = await axios.get(`${import.meta.env.VITE_API_URL}/getApiKey`)
     const api_key = res.data.apiKey
     useStore.setState({ api_key })
+    console.log("fetched key:", api_key);
+    
   } catch (error) {
     console.error('Failed to get API key:', error)
     throw new Error('Unable to retrieve API key')

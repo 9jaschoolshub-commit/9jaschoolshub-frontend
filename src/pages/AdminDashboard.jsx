@@ -58,13 +58,9 @@ export default function AdminDashboard() {
       }
     };
     setup();
-  }, [isSignedIn, getToken]);
+  }, [isSignedIn, getToken, setApiKey, setAuthToken]);
 
   const handleChange = (e) => {
-    if (!e.isTrusted) {
-      return;
-    }
-
     const { name, value, type, files } = e.target;
     setFormData((prev) => ({
       ...prev,
@@ -162,8 +158,6 @@ export default function AdminDashboard() {
         }
 
         const payload = new FormData();
-
-        // Compare formData with selectedUniversity and append only changed fields
         if (formData.unversityName !== selectedUniversity.university_name) {
           payload.append("UniversityName", formData.unversityName);
         }
