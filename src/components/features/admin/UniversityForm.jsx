@@ -19,9 +19,8 @@ const UniversityForm = ({
   };
 
   const handleSelectChange = (setter, e) => {
-    const { name, value } = e.target;
-    // This component doesn't use setters, but we can adapt the call
-    handleChange({ target: { name, value } });
+    // The setter is ignored here as AdminDashboard's handleChange handles state update.
+    handleChange(e);
   };
 
   // --- Dynamic Form Handlers for Notable Programs ---
@@ -123,7 +122,7 @@ const UniversityForm = ({
         label="University Website"
         value={formData.website}
         handleInputChange={handleInputChange}
-        placeholder="e.g. university.edu.ng"
+        placeholder="e.g. https://university.edu.ng"
         className="w-full px-3 py-2 border border-gray-300 rounded-lg"
       />
 
