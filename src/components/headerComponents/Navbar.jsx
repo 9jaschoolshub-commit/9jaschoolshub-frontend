@@ -1,18 +1,24 @@
-import { navLinks } from "../../data/navData";
-import NavLinks from "./NavLinks";
+import { Link } from "react-router";
 
-const Navbar = () => {
-  return (
-    <nav className="hidden md:flex flex-1 text-lg gap-10">
-      {navLinks.map((navLink) => (
-        <NavLinks key={navLink.name} {...navLink} />
-      ))}
-    </nav>
+const navLinks = [
+    { name: "Home", href: "/" },
+    { name: "Universities", href: "/universities" },
+    { name: "Courses", href: "/courses" },
+];
 
-    /**
-     * Todo
-     * Implement nav section for mobile
-     */
-  );
-};
-export default Navbar;
+export default function Navbar({ closeMobileMenu }) {
+    return (
+        <nav className="flex flex-col md:flex-row gap-6">
+            {navLinks.map((navLink) => (
+                <Link
+                    key={navLink.name}
+                    to={navLink.href}
+                    onClick={closeMobileMenu}
+                    className="text-lg font-medium text-black md:text-white px-2 py-4 md:py-0 border-b border-gray-300 md:border-none"
+                >
+                    {navLink.name}
+                </Link>
+            ))}
+        </nav>
+    );
+}
